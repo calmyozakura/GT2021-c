@@ -29,15 +29,18 @@ public class iromawasi : MonoBehaviour
     Text scoreText;
     [SerializeField] GameObject Timer;  //制限時間のテキストオブジェクト
     Text timerText;
-    float timeCount = 60.0f;            //制限時間
+    float timeCount = 10.0f;            //制限時間
+    [SerializeField] GameObject Turn;   //ターンのテキストオブジェクト
+    Text turnText;
+    int nowTurn = 0;
 
     float alpha_Time = 1.0f;   //点滅させる時間
     float alpha_Sin;    //消すときに点滅させる
     bool alpha_Flg;
     int check = 0; //中身を順にみる変数
 
-    float pointTime = 10.0f;
     bool[] flgCheck = new bool[4];  //ポイントになった箇所を記憶
+    //int mainPanelNum = 0;               //全パネルが同じ色になったら色を変える
 
     // Start is called before the first frame update
     void Start()
@@ -54,6 +57,7 @@ public class iromawasi : MonoBehaviour
 
         scoreText = Score.GetComponent<Text>();
         timerText = Timer.GetComponent<Text>();
+        turnText = Turn.GetComponent<Text>();
 
         ColorChange();   //パネルの色変更
     }
@@ -67,18 +71,8 @@ public class iromawasi : MonoBehaviour
             ColorChange();   //パネルの色変更
             TimerCount();       //制限時間のカウントと表示
             SelectImageMove();  //現在選んでいるパネルの可視化
-
-            if (pointTime >= 0)
-            {
-                pointTime -= Time.deltaTime;    //制限時間のカウントダウン
-                if (pointTime <= 0)
-                {
-                    pointTime = 10.0f;
-                    if (!alpha_Flg) PointCheck();
-                }
-
-            }
-        }else if (alpha_Flg) alpha();
+        }
+        else if (alpha_Flg) alpha();
 
         //ゲーム終了
         if (Input.GetButtonDown("Y"))
@@ -90,6 +84,13 @@ public class iromawasi : MonoBehaviour
 #endif
         }
     }
+
+    void TurnCount()
+    {
+        nowTurn++;
+        turnText.text = "" + nowTurn;
+    }
+
     void alpha()
     {
         if (flgCheck[check])
@@ -123,7 +124,7 @@ public class iromawasi : MonoBehaviour
                 {
                     for (int i = 0; i < 4; i++)
                     {
-                        if (flgCheck[check])
+                        if (flgCheck[i])
                         {
                             //ランダムな数値にいれかえ
                             mainNumber[i] = mainColorNumber[Random.Range(0, 2)];
@@ -131,10 +132,10 @@ public class iromawasi : MonoBehaviour
                             sideNumber[(i / 2) + i + 1] = sideColorNumber[Random.Range(0, 2)];
                             sideNumber[(i / 2) + i + 4] = sideColorNumber[Random.Range(0, 2)];
                             sideNumber[(i / 2) + i + 3] = sideColorNumber[Random.Range(0, 2)];
-                        }
-                        flgCheck[i] = false;
-                    }
 
+                            flgCheck[i] = false;
+                        }
+                    }
                     check = 0;
                     alpha_Flg = false;
                 }else check += 1;
@@ -146,7 +147,7 @@ public class iromawasi : MonoBehaviour
             {
                 for (int i = 0; i < 4; i++)
                 {
-                    if (flgCheck[check])
+                    if (flgCheck[i])
                     {
                         //ランダムな数値にいれかえ
                         mainNumber[i] = mainColorNumber[Random.Range(0, 2)];
@@ -154,11 +155,10 @@ public class iromawasi : MonoBehaviour
                         sideNumber[(i / 2) + i + 1] = sideColorNumber[Random.Range(0, 2)];
                         sideNumber[(i / 2) + i + 4] = sideColorNumber[Random.Range(0, 2)];
                         sideNumber[(i / 2) + i + 3] = sideColorNumber[Random.Range(0, 2)];
+
+                        flgCheck[i] = false;
                     }
-
-                    flgCheck[i] = false;
                 }
-
                 check = 0;
                 alpha_Flg = false;
             }else check += 1;
@@ -278,7 +278,7 @@ public class iromawasi : MonoBehaviour
                 //alpha_Time = 3.0f;
             }
 
-            ColorChange();   //パネルの色変更
+            //ColorChange();   //パネルの色変更
             judgNum = 0;
         }
 
@@ -302,7 +302,17 @@ public class iromawasi : MonoBehaviour
         if (timeCount >= 0)
         {
             timeCount -= Time.deltaTime;    //制限時間のカウントダウン
+            if (Input.GetButtonDown("X")) timeCount = 0.0f; //Xボタンでターン即終了
+
             timerText.text = timeCount.ToString("f1");  //時間の表示
+
+            if (timeCount <= 0)
+            {
+                timeCount = 10.0f;
+                if (!alpha_Flg) PointCheck();
+                TurnCount();        //経過ターンの更新表示
+            }
+
         }
     }
 

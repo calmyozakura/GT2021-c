@@ -17,5 +17,7 @@ public class TestController : MonoBehaviour
         if (Input.GetButtonDown("LB")) Debug.Log("LB");
         Debug.Log(Input.GetAxis("ClossVertical"));
         Debug.Log(Input.GetAxis("ClossHorizontal"));
+        if (Input.GetButtonDown("Y")) Debug.Log("Y");
+        if (Input.GetButtonDown("X")) Debug.Log("X");
     }
 }
