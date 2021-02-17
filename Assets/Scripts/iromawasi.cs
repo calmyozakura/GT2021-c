@@ -31,17 +31,25 @@ public class iromawasi : MonoBehaviour
     Text timerText;
     float timeCount = 60.0f;            //制限時間
 
+    float alpha_Time = 1.0f;   //点滅させる時間
+    float alpha_Sin;    //消すときに点滅させる
+    bool alpha_Flg;
+    int check = 0; //中身を順にみる変数
+
+    float pointTime = 10.0f;
+    bool[] flgCheck = new bool[4];  //ポイントになった箇所を記憶
+
     // Start is called before the first frame update
     void Start()
     {
         for(int i = 0; i < 4; i++)
         {
-            mainNumber[i] = mainColorNumber[Random.Range(0, 2)];
+            mainNumber[i] = mainColorNumber[Random.Range(0, 1)];
         }
 
         for (int i = 0; i < 9; i++)
         {
-            sideNumber[i] = sideColorNumber[Random.Range(0, 2)];
+            sideNumber[i] = sideColorNumber[Random.Range(0, 1)];
         }
 
         scoreText = Score.GetComponent<Text>();
@@ -53,9 +61,24 @@ public class iromawasi : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        PanelOperation();   //パネルの操作
-        SelectImageMove();  //現在選んでいるパネルの可視化
-        TimerCount();       //制限時間のカウントと表示
+        if (!alpha_Flg)
+        {
+            PanelOperation();   //パネルの操作
+            ColorChange();   //パネルの色変更
+            TimerCount();       //制限時間のカウントと表示
+            SelectImageMove();  //現在選んでいるパネルの可視化
+
+            if (pointTime >= 0)
+            {
+                pointTime -= Time.deltaTime;    //制限時間のカウントダウン
+                if (pointTime <= 0)
+                {
+                    pointTime = 10.0f;
+                    if (!alpha_Flg) PointCheck();
+                }
+
+            }
+        }else if (alpha_Flg) alpha();
 
         //ゲーム終了
         if (Input.GetButtonDown("Y"))
@@ -65,6 +88,80 @@ public class iromawasi : MonoBehaviour
 #else
     Application.Quit();
 #endif
+        }
+    }
+    void alpha()
+    {
+        if (flgCheck[check])
+        {
+
+            if (alpha_Time >= 0)    //条件を満たしたパネルの点滅
+            {
+                alpha_Time -= Time.deltaTime;    //制限時間のカウントダウン
+                alpha_Sin = alpha_Time;
+                //alpha_Sin = Mathf.Sin(Time.time) / 2 + 0.5f;
+
+                sideImage[(check / 2) + check].color = new Color(1.0f, 1.0f, 1.0f, alpha_Sin);    //透明度を下げる
+                sideImage[(check / 2) + check + 1].color = new Color(1.0f, 1.0f, 1.0f, alpha_Sin);    //透明度を下げる
+                sideImage[(check / 2) + check + 4].color = new Color(1.0f, 1.0f, 1.0f, alpha_Sin);    //透明度を下げる
+                sideImage[(check / 2) + check + 3].color = new Color(1.0f, 1.0f, 1.0f, alpha_Sin);    //透明度を下げる
+            }
+            else if (alpha_Time <= 0)
+            {
+                //PointCheck();
+                alpha_Time = 1.0f;
+                //flgCheck[check] = false;
+                ColorChange();
+
+                //スコア+100と各パネルのボーナス分スコア+50
+                score += 100 + (50 * (bonusLevel[(check / 2) + check] + bonusLevel[(check / 2) + check + 1]
+                    + bonusLevel[(check / 2) + check + 4] + bonusLevel[(check / 2) + check + 3]));
+
+                scoreText.text = "" + score;
+
+                if (check >= 3)
+                {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        if (flgCheck[check])
+                        {
+                            //ランダムな数値にいれかえ
+                            mainNumber[i] = mainColorNumber[Random.Range(0, 2)];
+                            sideNumber[(i / 2) + i] = sideColorNumber[Random.Range(0, 2)];
+                            sideNumber[(i / 2) + i + 1] = sideColorNumber[Random.Range(0, 2)];
+                            sideNumber[(i / 2) + i + 4] = sideColorNumber[Random.Range(0, 2)];
+                            sideNumber[(i / 2) + i + 3] = sideColorNumber[Random.Range(0, 2)];
+                        }
+                        flgCheck[i] = false;
+                    }
+
+                    check = 0;
+                    alpha_Flg = false;
+                }else check += 1;
+            }
+        }
+        else
+        {
+            if (check >= 3)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    if (flgCheck[check])
+                    {
+                        //ランダムな数値にいれかえ
+                        mainNumber[i] = mainColorNumber[Random.Range(0, 2)];
+                        sideNumber[(i / 2) + i] = sideColorNumber[Random.Range(0, 2)];
+                        sideNumber[(i / 2) + i + 1] = sideColorNumber[Random.Range(0, 2)];
+                        sideNumber[(i / 2) + i + 4] = sideColorNumber[Random.Range(0, 2)];
+                        sideNumber[(i / 2) + i + 3] = sideColorNumber[Random.Range(0, 2)];
+                    }
+
+                    flgCheck[i] = false;
+                }
+
+                check = 0;
+                alpha_Flg = false;
+            }else check += 1;
         }
     }
 
@@ -87,7 +184,7 @@ public class iromawasi : MonoBehaviour
             bonusLevel[(chooseMain / 2) + chooseMain + 4] = bonusLevel[(chooseMain / 3) + chooseMain + 3];
             bonusLevel[(chooseMain / 2) + chooseMain + 3] = tmpBonus;
 
-            PointCheck();        //各パネルの得点計算
+            //PointCheck();        //各パネルの得点計算
         }
         //パネル時計回り
         if (Input.GetButtonDown("RB"))
@@ -107,7 +204,7 @@ public class iromawasi : MonoBehaviour
             bonusLevel[(chooseMain / 2) + chooseMain + 1] = tmpBonus;
 
 
-            PointCheck();        //各パネルの得点計算
+            //PointCheck();        //各パネルの得点計算
         }
 
         //十字キーのパネル選択
@@ -150,6 +247,7 @@ public class iromawasi : MonoBehaviour
 
         for (int i = 0; i < 4; i++)
         {
+
             judgNum += sideNumber[(i / 2) + i];
             judgNum += sideNumber[(i / 2) + i + 1];
             judgNum += sideNumber[(i / 2) + i + 4];
@@ -157,11 +255,14 @@ public class iromawasi : MonoBehaviour
 
             if (judgNum == mainNumber[i])   //色を満たした
             {
-                //スコア+100と各パネルのボーナス分スコア+50
-                score += 100 + (50 * (bonusLevel[(i / 2) + i] + bonusLevel[(i / 2) + i + 1] 
-                    + bonusLevel[(i / 2) + i + 4] + bonusLevel[(i / 2) + i + 3]));
+                flgCheck[i] = true;
+                alpha_Flg = true;
 
-                scoreText.text = "" + score;
+                ////スコア+100と各パネルのボーナス分スコア+50
+                //score += 100 + (50 * (bonusLevel[(i / 2) + i] + bonusLevel[(i / 2) + i + 1]
+                //    + bonusLevel[(i / 2) + i + 4] + bonusLevel[(i / 2) + i + 3]));
+
+                //scoreText.text = "" + score;
 
                 //Debug.Log(bonusLevel[(i / 2) + i]);
                 //Debug.Log(bonusLevel[(i / 2) + i + 1]);
@@ -174,18 +275,7 @@ public class iromawasi : MonoBehaviour
                 bonusFlg[(i / 2) + i + 4] = true;
                 bonusFlg[(i / 2) + i + 3] = true;
 
-                ////サイドパネルの色変更
-                //sideImage[(i / 2) + i].color = Color.green;
-                //sideImage[(i / 2) + i + 1].color = Color.green;
-                //sideImage[(i / 2) + i + 4].color = Color.green;
-                //sideImage[(i / 2) + i + 3].color = Color.green;
-
-                //ランダムな数値にいれかえ
-                mainNumber[i] = mainColorNumber[Random.Range(0, 2)];
-                sideNumber[(i / 2) + i] = sideColorNumber[Random.Range(0, 2)];
-                sideNumber[(i / 2) + i + 1] = sideColorNumber[Random.Range(0, 2)];
-                sideNumber[(i / 2) + i + 4] = sideColorNumber[Random.Range(0, 2)];
-                sideNumber[(i / 2) + i + 3] = sideColorNumber[Random.Range(0, 2)];
+                //alpha_Time = 3.0f;
             }
 
             ColorChange();   //パネルの色変更
@@ -205,6 +295,7 @@ public class iromawasi : MonoBehaviour
 
         //    bonusFlg[i] = false;    //このターンすでにボーナスになったかのリセット
         //}
+
     }
     void TimerCount()
     {
@@ -257,7 +348,6 @@ public class iromawasi : MonoBehaviour
                 default:
                     break;
             }
-
         }
     }
 }
