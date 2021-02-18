@@ -39,9 +39,8 @@ public class iromawasi : MonoBehaviour
     bool alpha_Flg;
     int check = 0; //中身を順にみる変数
 
-    bool[] flgCheck = new bool[4];  //ポイントになった箇所を記憶
-    //int mainPanelNum = 0;               //全パネルが同じ色になったら色を変える
-
+    bool[] flgCheck = new bool[5];  //ポイントになった箇所を記憶,5はnull
+    int mainColorNum = 0;               //全パネルが同じ色になったら色を変える
     // Start is called before the first frame update
     void Start()
     {
@@ -75,7 +74,7 @@ public class iromawasi : MonoBehaviour
         else if (alpha_Flg) alpha();
 
         //ゲーム終了
-        if (Input.GetButtonDown("Y"))
+        if (Input.GetButtonDown("Y"))   //Yを押すか無限ループしたら終了
         {
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
@@ -93,9 +92,8 @@ public class iromawasi : MonoBehaviour
 
     void alpha()
     {
-        if (flgCheck[check])
+        if (flgCheck[check] && check <= 3)   //0~3で条件を満たしたら
         {
-
             if (alpha_Time >= 0)    //条件を満たしたパネルの点滅
             {
                 alpha_Time -= Time.deltaTime;    //制限時間のカウントダウン
@@ -119,50 +117,45 @@ public class iromawasi : MonoBehaviour
                     + bonusLevel[(check / 2) + check + 4] + bonusLevel[(check / 2) + check + 3]));
 
                 scoreText.text = "" + score;
-
-                if (check >= 3)
-                {
-                    for (int i = 0; i < 4; i++)
-                    {
-                        if (flgCheck[i])
-                        {
-                            //ランダムな数値にいれかえ
-                            mainNumber[i] = mainColorNumber[Random.Range(0, 2)];
-                            sideNumber[(i / 2) + i] = sideColorNumber[Random.Range(0, 2)];
-                            sideNumber[(i / 2) + i + 1] = sideColorNumber[Random.Range(0, 2)];
-                            sideNumber[(i / 2) + i + 4] = sideColorNumber[Random.Range(0, 2)];
-                            sideNumber[(i / 2) + i + 3] = sideColorNumber[Random.Range(0, 2)];
-
-                            flgCheck[i] = false;
-                        }
-                    }
-                    check = 0;
-                    alpha_Flg = false;
-                }else check += 1;
+                check += 1;
             }
         }
-        else
+        else if (check > 3)    //最後に盤面を変える
         {
-            if (check >= 3)
+            for (int i = 0; i < 4; i++)
             {
-                for (int i = 0; i < 4; i++)
+                if (flgCheck[i])
                 {
-                    if (flgCheck[i])
-                    {
-                        //ランダムな数値にいれかえ
-                        mainNumber[i] = mainColorNumber[Random.Range(0, 2)];
-                        sideNumber[(i / 2) + i] = sideColorNumber[Random.Range(0, 2)];
-                        sideNumber[(i / 2) + i + 1] = sideColorNumber[Random.Range(0, 2)];
-                        sideNumber[(i / 2) + i + 4] = sideColorNumber[Random.Range(0, 2)];
-                        sideNumber[(i / 2) + i + 3] = sideColorNumber[Random.Range(0, 2)];
-
-                        flgCheck[i] = false;
-                    }
+                    //ランダムな数値にいれかえ
+                    mainNumber[i] = mainColorNumber[Random.Range(0, 2)];
+                    //mainNumber[i] = mainColorNumber[0];
+                    sideNumber[(i / 2) + i] = sideColorNumber[Random.Range(0, 2)];
+                    sideNumber[(i / 2) + i + 1] = sideColorNumber[Random.Range(0, 2)];
+                    sideNumber[(i / 2) + i + 4] = sideColorNumber[Random.Range(0, 2)];
+                    sideNumber[(i / 2) + i + 3] = sideColorNumber[Random.Range(0, 2)];
                 }
-                check = 0;
-                alpha_Flg = false;
-            }else check += 1;
+                mainColorNum += mainNumber[i];
+            }
+
+            for (int j = 0; j < 4; j++)  //4箇所の合計と色*4を見る { 4, 32, 128, 512}
+            {
+                while (mainColorNum == (mainColorNumber[j] * 4))  //4色同じだったら処理を繰り返す
+                {
+                    mainColorNum = 0;   //一度numを0にし
+                    for (int f = 0; f < 4; f++)
+                    {
+                        if(flgCheck[f]) mainNumber[f] = mainColorNumber[Random.Range(0, 2)]; //消したマスをランダムな色に変えて
+                        mainColorNum += mainNumber[f];       //もう一度numを入れなおす
+                    }
+                    Debug.Log("色変え"); //色変えと出て変わった
+                }
+            }
+            for(int f = 0; f < 4; f++) flgCheck[f] = false; //念のため別のforでfalseにする
+            mainColorNum = 0;
+            check = 0;
+            alpha_Flg = false;
         }
+        else check += 1;
     }
 
     void PanelOperation()
