@@ -5,12 +5,14 @@ using UnityEngine.UI;
 
 public class iromawasi : MonoBehaviour
 {
+    const int mainPanel = 4;    //メインパネルの数
+    const int sidePanel = 9;    //サイドパネルの数
 
-    int[] mainNumber = new int[4];     //2*2のナンバー
-    int[] sideNumber = new int[9];     //3*3のナンバー
+    int[] mainNumber = new int[mainPanel];     //2*2のナンバー
+    int[] sideNumber = new int[sidePanel];     //3*3のナンバー
     int tmpNumber;          //数字入れ替え時の一時保存
-    int[] bonusLevel = new int[9]; //サイドパネルのボーナス確認 (0=なし,1=あり)
-    bool[] bonusFlg = new bool[9]; //このターン既にボーナスパネルになったかどうか
+    int[] bonusLevel = new int[sidePanel]; //サイドパネルのボーナス確認 (0=なし,1=あり)
+    bool[] bonusFlg = new bool[sidePanel]; //このターン既にボーナスパネルになったかどうか
     int tmpBonus;         //ボーナス入れ替え時の一時保存
     int judgNum = 0;  //和を計算する配列
     int score = 0;      //スコア
@@ -19,8 +21,9 @@ public class iromawasi : MonoBehaviour
 
     bool ClossTilt;     //十字キーがニュートラルに戻ったか
 
-    [SerializeField] Image[] sideImage;      //ボーナスフラグで色を変える
-    [SerializeField] Image[] mainImage;      //ボーナスフラグで色を変える
+    [SerializeField] Image[] sideImage;
+    [SerializeField] Image[] sideBonusFrame;
+    [SerializeField] Image[] mainImage;
     int[] mainColorNumber = { 4, 32, 128, 512};    //メイン色の配列(赤、青、緑、黄)
     int[] sideColorNumber = { 1, 8, 32, 128 };     //サイド色の配列(赤、青、緑、黄)
     [SerializeField] GameObject selectMainImage; //現在選択しているメインパネルを表示
@@ -39,17 +42,17 @@ public class iromawasi : MonoBehaviour
     bool alpha_Flg;
     int check = 0; //中身を順にみる変数
 
-    bool[] flgCheck = new bool[5];  //ポイントになった箇所を記憶,5はnull
+    bool[] flgCheck = new bool[mainPanel + 1];  //ポイントになった箇所を記憶,5はnull
     int mainColorNum = 0;               //全パネルが同じ色になったら色を変える
     // Start is called before the first frame update
     void Start()
     {
-        for(int i = 0; i < 4; i++)
+        for(int i = 0; i < mainPanel; i++)
         {
             mainNumber[i] = mainColorNumber[Random.Range(0, 1)];
         }
 
-        for (int i = 0; i < 9; i++)
+        for (int i = 0; i < sidePanel; i++)
         {
             sideNumber[i] = sideColorNumber[Random.Range(0, 1)];
         }
@@ -74,7 +77,7 @@ public class iromawasi : MonoBehaviour
         else if (alpha_Flg) alpha();
 
         //ゲーム終了
-        if (Input.GetButtonDown("Y"))   //Yを押すか無限ループしたら終了
+        if (Input.GetButtonDown("Y"))   //Yを押したら終了
         {
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
@@ -107,7 +110,6 @@ public class iromawasi : MonoBehaviour
             }
             else if (alpha_Time <= 0)
             {
-                //PointCheck();
                 alpha_Time = 1.0f;
                 //flgCheck[check] = false;
                 ColorChange();
@@ -122,7 +124,7 @@ public class iromawasi : MonoBehaviour
         }
         else if (check > 3)    //最後に盤面を変える
         {
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < mainPanel; i++)
             {
                 if (flgCheck[i])
                 {
@@ -134,23 +136,23 @@ public class iromawasi : MonoBehaviour
                     sideNumber[(i / 2) + i + 4] = sideColorNumber[Random.Range(0, 2)];
                     sideNumber[(i / 2) + i + 3] = sideColorNumber[Random.Range(0, 2)];
                 }
-                mainColorNum += mainNumber[i];
+                mainColorNum += mainNumber[i];  //[0]^[3]の合計を得る
             }
 
-            for (int j = 0; j < 4; j++)  //4箇所の合計と色*4を見る { 4, 32, 128, 512}
+            for (int j = 0; j < mainPanel; j++)  //[0]^[3]の合計と色*4を見る { 4, 32, 128, 512}
             {
                 while (mainColorNum == (mainColorNumber[j] * 4))  //4色同じだったら処理を繰り返す
                 {
                     mainColorNum = 0;   //一度numを0にし
-                    for (int f = 0; f < 4; f++)
+                    for (int f = 0; f < mainPanel; f++)
                     {
                         if(flgCheck[f]) mainNumber[f] = mainColorNumber[Random.Range(0, 2)]; //消したマスをランダムな色に変えて
-                        mainColorNum += mainNumber[f];       //もう一度numを入れなおす
+                        mainColorNum += mainNumber[f];       //もう一度[0]^[3]の合計を得る
                     }
-                    Debug.Log("色変え"); //色変えと出て変わった
                 }
             }
-            for(int f = 0; f < 4; f++) flgCheck[f] = false; //念のため別のforでfalseにする
+            Bonus();    //ボーナスパネル設定
+            for (int f = 0; f < mainPanel; f++) flgCheck[f] = false; //念のため別のforでfalseにする
             mainColorNum = 0;
             check = 0;
             alpha_Flg = false;
@@ -172,12 +174,10 @@ public class iromawasi : MonoBehaviour
 
             //ボーナス入れ替え
             tmpBonus = bonusLevel[(chooseMain / 2) + chooseMain];
-            bonusLevel[(chooseMain / 2) + chooseMain] = bonusLevel[(chooseMain / 3) + chooseMain + 1];
-            bonusLevel[(chooseMain / 2) + chooseMain + 1] = bonusLevel[(chooseMain / 3) + chooseMain + 4];
-            bonusLevel[(chooseMain / 2) + chooseMain + 4] = bonusLevel[(chooseMain / 3) + chooseMain + 3];
+            bonusLevel[(chooseMain / 2) + chooseMain] = bonusLevel[(chooseMain / 2) + chooseMain + 1];
+            bonusLevel[(chooseMain / 2) + chooseMain + 1] = bonusLevel[(chooseMain / 2) + chooseMain + 4];
+            bonusLevel[(chooseMain / 2) + chooseMain + 4] = bonusLevel[(chooseMain / 2) + chooseMain + 3];
             bonusLevel[(chooseMain / 2) + chooseMain + 3] = tmpBonus;
-
-            //PointCheck();        //各パネルの得点計算
         }
         //パネル時計回り
         if (Input.GetButtonDown("RB"))
@@ -195,9 +195,6 @@ public class iromawasi : MonoBehaviour
             bonusLevel[(chooseMain / 2) + chooseMain + 3] = bonusLevel[(chooseMain / 2) + chooseMain + 4];
             bonusLevel[(chooseMain / 2) + chooseMain + 4] = bonusLevel[(chooseMain / 2) + chooseMain + 1];
             bonusLevel[(chooseMain / 2) + chooseMain + 1] = tmpBonus;
-
-
-            //PointCheck();        //各パネルの得点計算
         }
 
         //十字キーのパネル選択
@@ -238,7 +235,7 @@ public class iromawasi : MonoBehaviour
     void PointCheck()
     {
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < mainPanel; i++)
         {
 
             judgNum += sideNumber[(i / 2) + i];
@@ -249,46 +246,18 @@ public class iromawasi : MonoBehaviour
             if (judgNum == mainNumber[i])   //色を満たした
             {
                 flgCheck[i] = true;
-                alpha_Flg = true;
-
-                ////スコア+100と各パネルのボーナス分スコア+50
-                //score += 100 + (50 * (bonusLevel[(i / 2) + i] + bonusLevel[(i / 2) + i + 1]
-                //    + bonusLevel[(i / 2) + i + 4] + bonusLevel[(i / 2) + i + 3]));
-
-                //scoreText.text = "" + score;
-
-                //Debug.Log(bonusLevel[(i / 2) + i]);
-                //Debug.Log(bonusLevel[(i / 2) + i + 1]);
-                //Debug.Log(bonusLevel[(i / 2) + i + 4]);
-                //Debug.Log(bonusLevel[(i / 2) + i + 3]);
 
                 //ボーナスフラグon
                 bonusFlg[(i / 2) + i] = true;
                 bonusFlg[(i / 2) + i + 1] = true;
                 bonusFlg[(i / 2) + i + 4] = true;
                 bonusFlg[(i / 2) + i + 3] = true;
-
-                //alpha_Time = 3.0f;
             }
 
-            //ColorChange();   //パネルの色変更
             judgNum = 0;
         }
 
-        //最後にに全パネルのボーナスと色をリセット
-        //for (int i = 0; i < 9; i++)
-        //{
-
-        //    //ボーナスフラグがあれば+1なければ-1(下限0)
-        //    if(bonusLevel[i] > 0 && !bonusFlg[i]) bonusLevel[i] -= 1;
-        //    if(bonusFlg[i]) bonusLevel[i] = 1;
-
-        //    if (bonusLevel[i] == 0) sideImage[i].color = Color.gray;
-        //    else sideImage[i].color = Color.green;
-
-        //    bonusFlg[i] = false;    //このターンすでにボーナスになったかのリセット
-        //}
-
+        alpha_Flg = true;
     }
     void TimerCount()
     {
@@ -311,7 +280,7 @@ public class iromawasi : MonoBehaviour
 
     void ColorChange()
     {
-        for (int i= 0; i< 4; i++)
+        for (int i= 0; i< mainPanel; i++)
         {
             switch (mainNumber[i])
             {
@@ -332,7 +301,7 @@ public class iromawasi : MonoBehaviour
             }
         }
 
-        for(int i = 0;i < 9; i++)
+        for(int i = 0;i < sidePanel; i++)
         {
             switch (sideNumber[i])
             {
@@ -351,6 +320,24 @@ public class iromawasi : MonoBehaviour
                 default:
                     break;
             }
+
+            if (bonusLevel[i] == 0) sideBonusFrame[i].color = Color.gray;
+            else if (bonusLevel[i] > 0) sideBonusFrame[i].color = Color.yellow;
+        }
+    }
+
+    void Bonus()
+    {
+        for (int f = 0; f < sidePanel; f++)
+        {
+            //ボーナスフラグがあれば+1なければ-1(下限0)
+            if (bonusLevel[f] > 0 && !bonusFlg[f]) bonusLevel[f] -= 1;
+            if (bonusFlg[f]) bonusLevel[f] = 1;
+
+            //if (bonusLevel[f] == 0) sideBonusFrame[f].color = Color.gray;
+            //else if(bonusLevel[f] > 0) sideBonusFrame[f].color = Color.yellow;
+
+            bonusFlg[f] = false;
         }
     }
 }
