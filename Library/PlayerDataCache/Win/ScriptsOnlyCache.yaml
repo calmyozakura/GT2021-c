@@ -2,6 +2,7 @@ ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
     - GameMain
+    - PanelAnim
     - TestController
     - iromawasi
     Unity.2D.Animation.Editor.dll:
@@ -17,8 +18,10 @@ ScriptsOnlyBuild:
     UnityEditor.Graphs.dll:
     - UnityEditor.Graphs.AnimationBlendTree.Graph
     - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
+    - UnityEditor.Graphs.AnimationStateMachine.AnyStateNode
     - UnityEditor.Graphs.AnimationStateMachine.Graph
     - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
+    - UnityEditor.Graphs.AnimationStateMachine.StateNode
     - UnityEditor.Graphs.AnimatorControllerTool
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
@@ -60,11 +63,11 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 12278}
     - Class: 114
-      Script: {instanceID: 13746}
+      Script: {instanceID: 13748}
     - Class: 114
-      Script: {instanceID: 13806}
+      Script: {instanceID: 13808}
     - Class: 114
-      Script: {instanceID: 14360}
+      Script: {instanceID: 14362}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -92,7 +95,13 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 48
       Script: {instanceID: 0}
+    - Class: 74
+      Script: {instanceID: 0}
     - Class: 81
+      Script: {instanceID: 0}
+    - Class: 91
+      Script: {instanceID: 0}
+    - Class: 95
       Script: {instanceID: 0}
     - Class: 104
       Script: {instanceID: 0}
@@ -107,11 +116,13 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 12790}
     - Class: 114
-      Script: {instanceID: 13746}
+      Script: {instanceID: 13552}
     - Class: 114
-      Script: {instanceID: 13806}
+      Script: {instanceID: 13748}
     - Class: 114
-      Script: {instanceID: 14360}
+      Script: {instanceID: 13808}
+    - Class: 114
+      Script: {instanceID: 14362}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -401,7 +412,7 @@ ScriptsOnlyBuild:
     className: TMP_SpriteAnimator
   - hash:
       serializedVersion: 2
-      Hash: 099f881546df4d0fc424b1850a8baf59
+      Hash: 48cc5a3ad062140e70cfa8952c12fa77
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: iromawasi
@@ -495,6 +506,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: TimelineAsset
+  - hash:
+      serializedVersion: 2
+      Hash: a45dffe5530f4d284bd9846c13eee6c1
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: PanelAnim
   - hash:
       serializedVersion: 2
       Hash: 6939772cb3ce775a8e8d99f332534491

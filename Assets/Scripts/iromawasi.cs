@@ -22,9 +22,13 @@ public class iromawasi : MonoBehaviour
     bool ClossTilt;     //十字キーがニュートラルに戻ったか
 
     [SerializeField] Image[] sideImage;
+    [SerializeField] GameObject[] obj;  //アニメーションさせるためのオブジェクト
+    [SerializeField] PanelAnim[] panelAnim;
+    PanelAnim tmpAnim;
+    GameObject tmpObj;
     [SerializeField] Image[] sideBonusFrame;
     [SerializeField] Image[] mainImage;
-    int[] mainColorNumber = { 4, 32, 128, 512};    //メイン色の配列(赤、青、緑、黄)
+    int[] mainColorNumber = { 4, 32, 128, 512 };    //メイン色の配列(赤、青、緑、黄)
     int[] sideColorNumber = { 1, 8, 32, 128 };     //サイド色の配列(赤、青、緑、黄)
     [SerializeField] GameObject selectMainImage; //現在選択しているメインパネルを表示
 
@@ -44,10 +48,14 @@ public class iromawasi : MonoBehaviour
 
     bool[] flgCheck = new bool[mainPanel + 1];  //ポイントになった箇所を記憶,5はnull
     int mainColorNum = 0;               //全パネルが同じ色になったら色を変える
+
+    bool[] panelMove = new bool[2]; //右か左にパネル移動させるフラグ
+    float changeTime = 0.1f;
+
     // Start is called before the first frame update
     void Start()
     {
-        for(int i = 0; i < mainPanel; i++)
+        for (int i = 0; i < mainPanel; i++)
         {
             mainNumber[i] = mainColorNumber[Random.Range(0, 1)];
         }
@@ -55,6 +63,7 @@ public class iromawasi : MonoBehaviour
         for (int i = 0; i < sidePanel; i++)
         {
             sideNumber[i] = sideColorNumber[Random.Range(0, 1)];
+            panelAnim[i] = obj[i].GetComponent<PanelAnim>();
         }
 
         scoreText = Score.GetComponent<Text>();
@@ -69,7 +78,8 @@ public class iromawasi : MonoBehaviour
     {
         if (!alpha_Flg)
         {
-            PanelOperation();   //パネルの操作
+            if (!panelMove[0] && !panelMove[1]) PanelOperation();   //パネルの操作
+            else if (panelMove[0] || panelMove[1]) PanelMove();        //パネルのアニメーション
             ColorChange();   //パネルの色変更
             TimerCount();       //制限時間のカウントと表示
             SelectImageMove();  //現在選んでいるパネルの可視化
@@ -146,7 +156,7 @@ public class iromawasi : MonoBehaviour
                     mainColorNum = 0;   //一度numを0にし
                     for (int f = 0; f < mainPanel; f++)
                     {
-                        if(flgCheck[f]) mainNumber[f] = mainColorNumber[Random.Range(0, 2)]; //消したマスをランダムな色に変えて
+                        if (flgCheck[f]) mainNumber[f] = mainColorNumber[Random.Range(0, 2)]; //消したマスをランダムな色に変えて
                         mainColorNum += mainNumber[f];       //もう一度[0]^[3]の合計を得る
                     }
                 }
@@ -154,6 +164,7 @@ public class iromawasi : MonoBehaviour
             Bonus();    //ボーナスパネル設定
             for (int f = 0; f < mainPanel; f++) flgCheck[f] = false; //念のため別のforでfalseにする
             mainColorNum = 0;
+            ColorChange();   //パネルの色変更
             check = 0;
             alpha_Flg = false;
         }
@@ -165,40 +176,43 @@ public class iromawasi : MonoBehaviour
         //パネル反時計回り
         if (Input.GetButtonDown("LB"))
         {
-            //ナンバー入れ替え
-            tmpNumber = sideNumber[(chooseMain / 2) + chooseMain];
-            sideNumber[(chooseMain / 2) + chooseMain] = sideNumber[(chooseMain / 2) + chooseMain + 1];
-            sideNumber[(chooseMain / 2) + chooseMain + 1] = sideNumber[(chooseMain / 2) + chooseMain + 4];
-            sideNumber[(chooseMain / 2) + chooseMain + 4] = sideNumber[(chooseMain / 2) + chooseMain + 3];
-            sideNumber[(chooseMain / 2) + chooseMain + 3] = tmpNumber;
 
-            //ボーナス入れ替え
-            tmpBonus = bonusLevel[(chooseMain / 2) + chooseMain];
-            bonusLevel[(chooseMain / 2) + chooseMain] = bonusLevel[(chooseMain / 2) + chooseMain + 1];
-            bonusLevel[(chooseMain / 2) + chooseMain + 1] = bonusLevel[(chooseMain / 2) + chooseMain + 4];
-            bonusLevel[(chooseMain / 2) + chooseMain + 4] = bonusLevel[(chooseMain / 2) + chooseMain + 3];
-            bonusLevel[(chooseMain / 2) + chooseMain + 3] = tmpBonus;
+            panelMove[0] = true;
+
+            //パネルの回転アニメーション
+            panelAnim[(chooseMain / 2) + chooseMain].animFlg[1] = true; //down
+            panelAnim[(chooseMain / 2) + chooseMain + 1].animFlg[2] = true; //left
+            panelAnim[(chooseMain / 2) + chooseMain + 4].animFlg[3] = true; //up
+            panelAnim[(chooseMain / 2) + chooseMain + 3].animFlg[0] = true; //right
+
+            //スクリプト入れ替え
+            //tmpAnim = panelAnim[(chooseMain / 2) + chooseMain];
+            //panelAnim[(chooseMain / 2) + chooseMain] = panelAnim[(chooseMain / 2) + chooseMain + 1];
+            //panelAnim[(chooseMain / 2) + chooseMain + 1] = panelAnim[(chooseMain / 2) + chooseMain + 4];
+            //panelAnim[(chooseMain / 2) + chooseMain + 4] = panelAnim[(chooseMain / 2) + chooseMain + 3];
+            //panelAnim[(chooseMain / 2) + chooseMain + 3] = tmpAnim;
         }
         //パネル時計回り
         if (Input.GetButtonDown("RB"))
         {
-            //ナンバー入れ替え
-            tmpNumber = sideNumber[(chooseMain / 2) + chooseMain];
-            sideNumber[(chooseMain / 2) + chooseMain] = sideNumber[(chooseMain / 2) + chooseMain + 3];
-            sideNumber[(chooseMain / 2) + chooseMain + 3] = sideNumber[(chooseMain / 2) + chooseMain + 4];
-            sideNumber[(chooseMain / 2) + chooseMain + 4] = sideNumber[(chooseMain / 2) + chooseMain + 1];
-            sideNumber[(chooseMain / 2) + chooseMain + 1] = tmpNumber;
+            panelMove[1] = true;
 
-            //ボーナス入れ替え
-            tmpBonus = bonusLevel[(chooseMain / 2) + chooseMain];
-            bonusLevel[(chooseMain / 2) + chooseMain] = bonusLevel[(chooseMain / 2) + chooseMain + 3];
-            bonusLevel[(chooseMain / 2) + chooseMain + 3] = bonusLevel[(chooseMain / 2) + chooseMain + 4];
-            bonusLevel[(chooseMain / 2) + chooseMain + 4] = bonusLevel[(chooseMain / 2) + chooseMain + 1];
-            bonusLevel[(chooseMain / 2) + chooseMain + 1] = tmpBonus;
+            //パネルの回転アニメーション
+            panelAnim[(chooseMain / 2) + chooseMain].animFlg[0] = true; //right
+            panelAnim[(chooseMain / 2) + chooseMain + 1].animFlg[1] = true; //down
+            panelAnim[(chooseMain / 2) + chooseMain + 4].animFlg[2] = true; //up
+            panelAnim[(chooseMain / 2) + chooseMain + 3].animFlg[3] = true; //left
+
+            ////スクリプト入れ替え
+            //tmpAnim = panelAnim[(chooseMain / 2) + chooseMain];
+            //panelAnim[(chooseMain / 2) + chooseMain] = panelAnim[(chooseMain / 2) + chooseMain + 3];
+            //panelAnim[(chooseMain / 2) + chooseMain + 3] = panelAnim[(chooseMain / 2) + chooseMain + 4];
+            //panelAnim[(chooseMain / 2) + chooseMain + 4] = panelAnim[(chooseMain / 2) + chooseMain + 1];
+            //panelAnim[(chooseMain / 2) + chooseMain + 1] = tmpAnim;
         }
 
         //十字キーのパネル選択
-        if(0 > Input.GetAxis("ClossVertical") && !ClossTilt)    //↓入力時
+        if (0 > Input.GetAxis("ClossVertical") && !ClossTilt)    //↓入力時
         {
             if (chooseMain >= 2) chooseMain -= 2;
             else chooseMain += 2;
@@ -210,7 +224,7 @@ public class iromawasi : MonoBehaviour
             else chooseMain -= 2;
             ClossTilt = true;
         }
-        if(0 > Input.GetAxis("ClossHorizontal") && !ClossTilt)  //←入力時
+        if (0 > Input.GetAxis("ClossHorizontal") && !ClossTilt)  //←入力時
         {
             if (chooseMain % 2 == 0) chooseMain += 1;
             else chooseMain -= 1;
@@ -278,9 +292,10 @@ public class iromawasi : MonoBehaviour
         }
     }
 
-    void ColorChange()
+    public void ColorChange()
     {
-        for (int i= 0; i< mainPanel; i++)
+        Debug.Log("color");
+        for (int i = 0; i < mainPanel; i++)
         {
             switch (mainNumber[i])
             {
@@ -301,7 +316,7 @@ public class iromawasi : MonoBehaviour
             }
         }
 
-        for(int i = 0;i < sidePanel; i++)
+        for (int i = 0; i < sidePanel; i++)
         {
             switch (sideNumber[i])
             {
@@ -338,6 +353,61 @@ public class iromawasi : MonoBehaviour
             //else if(bonusLevel[f] > 0) sideBonusFrame[f].color = Color.yellow;
 
             bonusFlg[f] = false;
+        }
+    }
+
+    void PanelMove()    //アニメーション終了時に呼ぶ
+    {
+        if (changeTime > 0) changeTime -= Time.deltaTime;
+        else if (changeTime <= 0)
+        {
+            if (panelMove[0])   //反時計周り
+            {
+                //ナンバー入れ替え
+                tmpNumber = sideNumber[(chooseMain / 2) + chooseMain];
+                sideNumber[(chooseMain / 2) + chooseMain] = sideNumber[(chooseMain / 2) + chooseMain + 1];
+                sideNumber[(chooseMain / 2) + chooseMain + 1] = sideNumber[(chooseMain / 2) + chooseMain + 4];
+                sideNumber[(chooseMain / 2) + chooseMain + 4] = sideNumber[(chooseMain / 2) + chooseMain + 3];
+                sideNumber[(chooseMain / 2) + chooseMain + 3] = tmpNumber;
+
+                //ボーナス入れ替え
+                tmpBonus = bonusLevel[(chooseMain / 2) + chooseMain];
+                bonusLevel[(chooseMain / 2) + chooseMain] = bonusLevel[(chooseMain / 2) + chooseMain + 1];
+                bonusLevel[(chooseMain / 2) + chooseMain + 1] = bonusLevel[(chooseMain / 2) + chooseMain + 4];
+                bonusLevel[(chooseMain / 2) + chooseMain + 4] = bonusLevel[(chooseMain / 2) + chooseMain + 3];
+                bonusLevel[(chooseMain / 2) + chooseMain + 3] = tmpBonus;
+
+                ////オブジェクト入れ替え
+                //tmpObj = obj[(chooseMain / 2) + chooseMain];
+                //obj[(chooseMain / 2) + chooseMain] = obj[(chooseMain / 2) + chooseMain + 1];
+                //obj[(chooseMain / 2) + chooseMain + 1] = obj[(chooseMain / 2) + chooseMain + 4];
+                //obj[(chooseMain / 2) + chooseMain + 4] = obj[(chooseMain / 2) + chooseMain + 3];
+                //obj[(chooseMain / 2) + chooseMain + 3] = tmpObj;
+
+                panelMove[0] = false;
+            }
+            else if (panelMove[1])  //時計周り
+            {
+                //ナンバー入れ替え
+                tmpNumber = sideNumber[(chooseMain / 2) + chooseMain];
+                sideNumber[(chooseMain / 2) + chooseMain] = sideNumber[(chooseMain / 2) + chooseMain + 3];
+                sideNumber[(chooseMain / 2) + chooseMain + 3] = sideNumber[(chooseMain / 2) + chooseMain + 4];
+                sideNumber[(chooseMain / 2) + chooseMain + 4] = sideNumber[(chooseMain / 2) + chooseMain + 1];
+                sideNumber[(chooseMain / 2) + chooseMain + 1] = tmpNumber;
+
+                //ボーナス入れ替え
+                tmpBonus = bonusLevel[(chooseMain / 2) + chooseMain];
+                bonusLevel[(chooseMain / 2) + chooseMain] = bonusLevel[(chooseMain / 2) + chooseMain + 3];
+                bonusLevel[(chooseMain / 2) + chooseMain + 3] = bonusLevel[(chooseMain / 2) + chooseMain + 4];
+                bonusLevel[(chooseMain / 2) + chooseMain + 4] = bonusLevel[(chooseMain / 2) + chooseMain + 1];
+                bonusLevel[(chooseMain / 2) + chooseMain + 1] = tmpBonus;
+
+                panelMove[1] = false;
+            }
+
+            //panelAnim[0].change = false;
+            //ColorChange();   //パネルの色変更
+            changeTime = 0.1f;
         }
     }
 }
