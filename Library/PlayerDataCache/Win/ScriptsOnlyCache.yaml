@@ -18,10 +18,8 @@ ScriptsOnlyBuild:
     UnityEditor.Graphs.dll:
     - UnityEditor.Graphs.AnimationBlendTree.Graph
     - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
-    - UnityEditor.Graphs.AnimationStateMachine.AnyStateNode
     - UnityEditor.Graphs.AnimationStateMachine.Graph
     - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
-    - UnityEditor.Graphs.AnimationStateMachine.StateNode
     - UnityEditor.Graphs.AnimatorControllerTool
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
@@ -53,21 +51,21 @@ ScriptsOnlyBuild:
     - Class: 104
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 11266}
+      Script: {instanceID: 11274}
     - Class: 114
-      Script: {instanceID: 11554}
+      Script: {instanceID: 11562}
     - Class: 114
-      Script: {instanceID: 11608}
+      Script: {instanceID: 11616}
     - Class: 114
-      Script: {instanceID: 12184}
+      Script: {instanceID: 12192}
     - Class: 114
-      Script: {instanceID: 12278}
+      Script: {instanceID: 12286}
     - Class: 114
-      Script: {instanceID: 13748}
+      Script: {instanceID: 13756}
     - Class: 114
-      Script: {instanceID: 13808}
+      Script: {instanceID: 13816}
     - Class: 114
-      Script: {instanceID: 14362}
+      Script: {instanceID: 14370}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -106,23 +104,23 @@ ScriptsOnlyBuild:
     - Class: 104
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 11266}
+      Script: {instanceID: 11274}
     - Class: 114
-      Script: {instanceID: 11554}
+      Script: {instanceID: 11562}
     - Class: 114
-      Script: {instanceID: 11608}
+      Script: {instanceID: 11616}
     - Class: 114
-      Script: {instanceID: 12278}
+      Script: {instanceID: 12286}
     - Class: 114
-      Script: {instanceID: 12790}
+      Script: {instanceID: 12798}
     - Class: 114
-      Script: {instanceID: 13552}
+      Script: {instanceID: 13560}
     - Class: 114
-      Script: {instanceID: 13748}
+      Script: {instanceID: 13756}
     - Class: 114
-      Script: {instanceID: 13808}
+      Script: {instanceID: 13816}
     - Class: 114
-      Script: {instanceID: 14362}
+      Script: {instanceID: 14370}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128

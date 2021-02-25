@@ -294,7 +294,6 @@ public class iromawasi : MonoBehaviour
 
     public void ColorChange()
     {
-        Debug.Log("color");
         for (int i = 0; i < mainPanel; i++)
         {
             switch (mainNumber[i])
