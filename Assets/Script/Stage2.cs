@@ -317,11 +317,11 @@ public class Stage2 : MonoBehaviour
                     mainSphere.GetComponent<Renderer>().material.color = mainSphereColor;
                     break;
                 case 128:
-                    mainSphereColor = Color.green;
+                    mainSphereColor = Color.yellow;
                     mainSphere.GetComponent<Renderer>().material.color = mainSphereColor;
                     break;
                 case 512:
-                    mainSphereColor = Color.yellow;
+                    mainSphereColor = Color.green;
                     mainSphere.GetComponent<Renderer>().material.color = mainSphereColor;
                     break;
                 default:
@@ -342,11 +342,11 @@ public class Stage2 : MonoBehaviour
                     sideSphere[i].GetComponent<Renderer>().material.color = sideSphereColor[i];
                     break;
                 case 32:
-                    sideSphereColor[i] = Color.green;
+                    sideSphereColor[i] = Color.yellow;
                     sideSphere[i].GetComponent<Renderer>().material.color = sideSphereColor[i];
                     break;
                 case 128:
-                    sideSphereColor[i] = Color.yellow;
+                    sideSphereColor[i] = Color.green;
                     sideSphere[i].GetComponent<Renderer>().material.color = sideSphereColor[i];
                     break;
                 default:
