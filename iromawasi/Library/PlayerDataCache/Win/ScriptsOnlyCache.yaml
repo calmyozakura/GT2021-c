@@ -2,9 +2,13 @@ ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
     - ControllerTest
+    - CursorSelect
+    - Panel
     - PanelAnim
-    - Stage2
-    - TimeStamp
+    - Stage1
+    - TestStage
+    - Timer
+    - Turn
     Unity.Rider.Editor.dll:
     - Packages.Rider.Editor.UnitTesting.CallbackData
     UnityEditor.Graphs.dll:
@@ -25,7 +29,7 @@ ScriptsOnlyBuild:
     - UnityEngine.UI.Image
     - UnityEngine.UI.Text
   sceneClasses:
-    Assets/Scenes/Stage2.unity:
+    Assets/Scenes/Stage3.unity:
     - Class: 1
       Script: {instanceID: 0}
     - Class: 4
@@ -57,25 +61,33 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 11274}
+      Script: {instanceID: 11262}
     - Class: 114
-      Script: {instanceID: 11432}
+      Script: {instanceID: 11420}
     - Class: 114
-      Script: {instanceID: 11472}
+      Script: {instanceID: 11460}
     - Class: 114
-      Script: {instanceID: 11768}
+      Script: {instanceID: 11756}
     - Class: 114
-      Script: {instanceID: 11862}
+      Script: {instanceID: 11850}
     - Class: 114
-      Script: {instanceID: 12094}
+      Script: {instanceID: 11952}
     - Class: 114
-      Script: {instanceID: 12426}
+      Script: {instanceID: 12418}
     - Class: 114
-      Script: {instanceID: 12732}
+      Script: {instanceID: 12574}
     - Class: 114
-      Script: {instanceID: 12948}
+      Script: {instanceID: 12674}
     - Class: 114
-      Script: {instanceID: 13084}
+      Script: {instanceID: 12726}
+    - Class: 114
+      Script: {instanceID: 13044}
+    - Class: 114
+      Script: {instanceID: 13080}
+    - Class: 114
+      Script: {instanceID: 13108}
+    - Class: 114
+      Script: {instanceID: 13118}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -303,6 +315,12 @@ ScriptsOnlyBuild:
     className: Selectable
   - hash:
       serializedVersion: 2
+      Hash: 755dabce826288d6c280dd5d8a6414bf
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: TestStage
+  - hash:
+      serializedVersion: 2
       Hash: d4020bafcd3ccbb5601a6e6c8ac78be0
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
@@ -349,6 +367,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
     className: RawImage
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Score
   - hash:
       serializedVersion: 2
       Hash: 5ad4aa237d47ac2bab17bacb672edf7a
@@ -409,6 +433,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: TimelineAsset
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Turn
   - hash:
       serializedVersion: 2
       Hash: 6939772cb3ce775a8e8d99f332534491
@@ -495,6 +525,12 @@ ScriptsOnlyBuild:
     className: EventTrigger
   - hash:
       serializedVersion: 2
+      Hash: 04a8df829a9aab9166999c1dfc1e3c7b
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Panel
+  - hash:
+      serializedVersion: 2
       Hash: 5dea360fb0b147724ac344e6f399c2f3
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
@@ -537,10 +573,22 @@ ScriptsOnlyBuild:
     className: SignalEmitter
   - hash:
       serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: CursorSelect
+  - hash:
+      serializedVersion: 2
       Hash: 7072231382eb3c4871b3dd75ad0227e1
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
     className: Slider
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Timer
   - hash:
       serializedVersion: 2
       Hash: 0fd6822f6177297bd0eb4d83cc7a9030
@@ -555,5 +603,5 @@ ScriptsOnlyBuild:
     className: PlayableTrack
   platform: 5
   scenePathNames:
-  - Assets/Scenes/Stage2.unity
+  - Assets/Scenes/Stage3.unity
   playerPath: D:/unity2017/kazumawasi/iromawasi/Build/iromawasi.exe
