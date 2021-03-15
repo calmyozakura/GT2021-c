@@ -130,11 +130,13 @@ public class TestStage : MonoBehaviour
                 alpha_Sin = alpha_Time;
                 //alpha_Sin = Mathf.Sin(Time.time) / 2 + 0.5f;
 
+                mainSphereColor[check].a = alpha_Sin; //透明度を下げる
                 sideSphereColor[(check / 3) + check].a = alpha_Sin; //透明度を下げる
                 sideSphereColor[(check / 3) + check + 1].a = alpha_Sin; //透明度を下げる
                 sideSphereColor[(check / 3) + check + 4].a = alpha_Sin; //透明度を下げる
                 sideSphereColor[(check / 3) + check + 5].a = alpha_Sin; //透明度を下げる
 
+                mainSphere[check].GetComponent<Renderer>().material.color = sideSphereColor[check];
                 sideSphere[(check / 3) + check].GetComponent<Renderer>().material.color = sideSphereColor[(check / 3) + check];
                 sideSphere[(check / 3) + check + 1].GetComponent<Renderer>().material.color = sideSphereColor[(check / 3) + check + 1];
                 sideSphere[(check / 3) + check + 4].GetComponent<Renderer>().material.color = sideSphereColor[(check / 3) + check + 4];
@@ -161,11 +163,13 @@ public class TestStage : MonoBehaviour
                 {
                     if (flgCheck[i])
                     {
+                        mainSphereColor[i].a = alpha_Sin; //透明度を下げる
                         sideSphereColor[(i / 3) + i].a = alpha_Sin; //透明度を下げる
                         sideSphereColor[(i / 3) + i + 1].a = alpha_Sin; //透明度を下げる
                         sideSphereColor[(i / 3) + i + 4].a = alpha_Sin; //透明度を下げる
                         sideSphereColor[(i / 3) + i + 5].a = alpha_Sin; //透明度を下げる
 
+                        mainSphere[i].GetComponent<Renderer>().material.color = sideSphereColor[i];
                         sideSphere[(i / 3) + i].GetComponent<Renderer>().material.color = sideSphereColor[(i / 3) + i];
                         sideSphere[(i / 3) + i + 1].GetComponent<Renderer>().material.color = sideSphereColor[(i / 3) + i + 1];
                         sideSphere[(i / 3) + i + 4].GetComponent<Renderer>().material.color = sideSphereColor[(i / 3) + i + 4];
@@ -276,6 +280,7 @@ public class TestStage : MonoBehaviour
             judgNum += sideNumber[(i / 3) + i + 1];
             judgNum += sideNumber[(i / 3) + i + 5];
             judgNum += sideNumber[(i / 3) + i + 4];
+
 
             if (judgNum == mainNumber[i])   //色を満たした
             {
