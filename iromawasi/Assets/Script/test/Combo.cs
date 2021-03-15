@@ -10,12 +10,13 @@ public class Combo : MonoBehaviour
 
     public float comboTime = 0f;
     public int comboCount = 0;
-    float blinking;
+    float blinking = 0f;
     float blinkingSpeed = 2.0f;
     // Start is called before the first frame update
     void Start()
     {
         comboText = GetComponent<Text>();
+        comboText.color = new Color(255, 255, 255, 0);  //コンボ表記透明
         //comboColor = GetComponent<Renderer>().material.color;
     }
 

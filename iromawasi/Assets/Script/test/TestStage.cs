@@ -72,13 +72,13 @@ public class TestStage : MonoBehaviour
     {
         for (int i = 0; i < mainPanel; i++)
         {
-            mainNumber[i] = mainColorNumber[Random.Range(0, 1)];
+            mainNumber[i] = mainColorNumber[Random.Range(0, 2)];
             mainSphereColor[i] = mainSphere[i].GetComponent<Renderer>().material.color;
         }
 
         for (int i = 0; i < sidePanel; i++)
         {
-            sideNumber[i] = sideColorNumber[Random.Range(0, 1)];
+            sideNumber[i] = sideColorNumber[Random.Range(0, 2)];
             sideSphereColor[i] = sideSphere[i].GetComponent<Renderer>().material.color;
             //panelAnim[i] = obj[i].GetComponent<PanelAnim>();一時消し
         }
@@ -189,10 +189,10 @@ public class TestStage : MonoBehaviour
                         sideNumber[(i / 3) + i + 5] = sideColorNumber[Random.Range(0, 2)];
                         sideNumber[(i / 3) + i + 4] = sideColorNumber[Random.Range(0, 2)];
                     }
-                    //mainColorNum += mainNumber[i];  //[0]^[3]合計を得る 一時消し
+                    mainColorNum += mainNumber[i];  //[0]^[3]合計を得る
                 }
 
-                for (int j = 0; j < 4; j++)  //[0]^[9]の合計と色*4を見る { 4, 32, 128, 512} 一時消し
+                for (int j = 0; j < 4; j++)  //[0]^[9]の合計と色*4を見る { 4, 32, 128, 512}
                 {
                     while (mainColorNum == (mainColorNumber[j] * mainPanel))  //9色同じだったら処理を繰り返す
                     {
@@ -204,6 +204,7 @@ public class TestStage : MonoBehaviour
                         }
                     }
                 }
+
                 Bonus();    //ボーナスパネル設定
                 for (int f = 0; f < mainPanel; f++) flgCheck[f] = false; //念のため別のforでfalseにする
                 mainColorNum = 0;
