@@ -8,7 +8,7 @@ public class TestStage : MonoBehaviour
     [SerializeField] CursorSelect cursorSelectCS;
     [SerializeField] Turn TurnCS;
     [SerializeField] Timer TimerCS;
-
+    [SerializeField] Combo ComboCS;
 
     const int mainPanel = 9;    //メインパネルの数
     const int sidePanel = 16;    //サイドパネルの数
@@ -97,6 +97,7 @@ public class TestStage : MonoBehaviour
         {
             if (!panelMove[0] && !panelMove[1]) PanelOperation();   //パネルの操作
             else if (panelMove[0] || panelMove[1]) PanelMove();        //パネルのアニメーション
+            PointCheck();   //盤面が揃ったか見る
             ColorChange();   //パネルの色変更
             TimerCS.TimerCount();       //制限時間のカウントと表示
 
@@ -181,28 +182,28 @@ public class TestStage : MonoBehaviour
                     {
 
                         //ランダムな数値にいれかえ
-                        mainNumber[i] = mainColorNumber[Random.Range(0, 3)];
+                        mainNumber[i] = mainColorNumber[Random.Range(0, 2)];
                         //mainNumber[i] = mainColorNumber[0];
-                        sideNumber[(i / 3) + i] = sideColorNumber[Random.Range(0, 3)];
-                        sideNumber[(i / 3) + i + 1] = sideColorNumber[Random.Range(0, 3)];
-                        sideNumber[(i / 3) + i + 5] = sideColorNumber[Random.Range(0, 3)];
-                        sideNumber[(i / 3) + i + 4] = sideColorNumber[Random.Range(0, 3)];
+                        sideNumber[(i / 3) + i] = sideColorNumber[Random.Range(0, 2)];
+                        sideNumber[(i / 3) + i + 1] = sideColorNumber[Random.Range(0, 2)];
+                        sideNumber[(i / 3) + i + 5] = sideColorNumber[Random.Range(0, 2)];
+                        sideNumber[(i / 3) + i + 4] = sideColorNumber[Random.Range(0, 2)];
                     }
-                    //mainColorNum += mainNumber[i];  //[0]^[3]の合計を得る 一時消し
+                    //mainColorNum += mainNumber[i];  //[0]^[3]合計を得る 一時消し
                 }
 
-                //for (int j = 0; j < mainPanel; j++)  //[0]^[9]の合計と色*4を見る { 4, 32, 128, 512} 一時消し
-                //{
-                //    //while (mainColorNum == (mainColorNumber[j] * mainPanel))  //9色同じだったら処理を繰り返す
-                //    //{
-                //    //    mainColorNum = 0;   //一度numを0にし
-                //    //    for (int f = 0; f < mainPanel; f++)
-                //    //    {
-                //    //        if (flgCheck[f]) mainNumber[f] = mainColorNumber[Random.Range(0, 2)]; //消したマスをランダムな色に変えて
-                //    //        mainColorNum += mainNumber[f];       //もう一度[0]^[3]の合計を得る
-                //    //    }
-                //    //}
-                //}
+                for (int j = 0; j < 4; j++)  //[0]^[9]の合計と色*4を見る { 4, 32, 128, 512} 一時消し
+                {
+                    while (mainColorNum == (mainColorNumber[j] * mainPanel))  //9色同じだったら処理を繰り返す
+                    {
+                        mainColorNum = 0;   //一度numを0にし
+                        for (int f = 0; f < mainPanel; f++)
+                        {
+                            if (flgCheck[f]) mainNumber[f] = mainColorNumber[Random.Range(0, 2)]; //消したマスをランダムな色に変えて
+                            mainColorNum += mainNumber[f];       //もう一度[0]^[9]の合計を得る
+                        }
+                    }
+                }
                 Bonus();    //ボーナスパネル設定
                 for (int f = 0; f < mainPanel; f++) flgCheck[f] = false; //念のため別のforでfalseにする
                 mainColorNum = 0;
@@ -257,11 +258,11 @@ public class TestStage : MonoBehaviour
 
         if (0 == Input.GetAxis("ClossHorizontal") && (0 == Input.GetAxis("ClossVertical"))) ClossTilt = false;
 
-        if (Input.GetButtonDown("X")) //ターン終了
-        {
-            if (!alpha_Flg) PointCheck();
-            TurnCS.TurnCount();        //経過ターンの更新表示
-        }
+        //if (Input.GetButtonDown("X")) //ターン終了
+        //{
+        //    if (!alpha_Flg) PointCheck();
+        //    TurnCS.TurnCount();        //経過ターンの更新表示
+        //}
     }
     //***
     void PointCheck()
@@ -284,12 +285,12 @@ public class TestStage : MonoBehaviour
                 bonusFlg[(i / 3) + i + 1] = true;
                 bonusFlg[(i / 3) + i + 5] = true;
                 bonusFlg[(i / 3) + i + 4] = true;
+
+                alpha_Flg = true;
             }
 
             judgNum = 0;
         }
-
-        alpha_Flg = true;
     }
 
     //***
@@ -464,5 +465,8 @@ public class TestStage : MonoBehaviour
             + bonusLevel[(check / 3) + check + 5] + bonusLevel[(check / 3) + check + 4]));
 
         scoreText.text = "" + score;
+
+        ComboCS.comboTime = 5.0f;
+        ComboCS.comboCount += 1;
     }
 }
