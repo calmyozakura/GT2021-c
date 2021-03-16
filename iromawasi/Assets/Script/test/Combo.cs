@@ -17,7 +17,6 @@ public class Combo : MonoBehaviour
     {
         comboText = GetComponent<Text>();
         comboText.color = new Color(255, 255, 255, 0);  //コンボ表記透明
-        //comboColor = GetComponent<Renderer>().material.color;
     }
 
     // Update is called once per frame
@@ -28,16 +27,11 @@ public class Combo : MonoBehaviour
             comboTime -= Time.deltaTime;    //制限時間のカウントダウン
             comboText.text = comboCount + "Combo!";
 
-            if (comboTime >= 2) comboText.color = new Color(255, 255, 255, 1.0f);  //絶対値でsin波を透明度に;
+            if (comboTime >= 2) comboText.color = new Color(255, 255, 255, 1.0f);
             else if (comboTime < 2)   //2秒以下で点滅
             {
-                //blinking = (comboTime * blinkingSpeed) % 2;
-                blinking = Mathf.Sin(2 * Mathf.PI * blinkingSpeed * Time.time); //sin波取得
-
-                comboText.color = new Color(255, 255, 255, Mathf.Abs(blinking));  //絶対値でsin波を透明度に
-
-                //comboColor.a = alpha_Sin;
-                //GetComponent<Renderer>().material.color = comboColor;
+                blinking = Mathf.Sin(2 * Mathf.PI * blinkingSpeed * Time.time); //sin波取得 点滅
+                comboText.color = new Color(255, 255, 255, Mathf.Abs(blinking));  //絶対値でsin波を透明度に 点滅
             }
         }
         else if (comboTime <= 0)

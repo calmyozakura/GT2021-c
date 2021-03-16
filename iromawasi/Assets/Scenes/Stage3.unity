@@ -409,7 +409,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efc58014333c7d344bee92e941dd7d06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animFlg: 00000000
+  animFlg: 0000000000000000
 --- !u!95 &53602455
 Animator:
   serializedVersion: 3
@@ -536,7 +536,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efc58014333c7d344bee92e941dd7d06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animFlg: 00000000
+  animFlg: 0000000000000000
 --- !u!95 &118577938
 Animator:
   serializedVersion: 3
@@ -902,7 +902,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efc58014333c7d344bee92e941dd7d06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animFlg: 00000000
+  animFlg: 0000000000000000
 --- !u!95 &180903894
 Animator:
   serializedVersion: 3
@@ -1029,7 +1029,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efc58014333c7d344bee92e941dd7d06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animFlg: 00000000
+  animFlg: 0000000000000000
 --- !u!95 &238475793
 Animator:
   serializedVersion: 3
@@ -1269,7 +1269,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 80, y: -60}
+  m_AnchoredPosition: {x: 80, y: -130}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &426866007
@@ -1422,7 +1422,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efc58014333c7d344bee92e941dd7d06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animFlg: 00000000
+  animFlg: 0000000000000000
 --- !u!95 &443449591
 Animator:
   serializedVersion: 3
@@ -1592,7 +1592,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efc58014333c7d344bee92e941dd7d06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animFlg: 00000000
+  animFlg: 0000000000000000
 --- !u!95 &625593294
 Animator:
   serializedVersion: 3
@@ -1724,7 +1724,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 80, y: -170}
+  m_AnchoredPosition: {x: 80, y: -230}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &652356088
@@ -1875,7 +1875,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efc58014333c7d344bee92e941dd7d06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animFlg: 00000000
+  animFlg: 0000000000000000
 --- !u!95 &690919147
 Animator:
   serializedVersion: 3
@@ -2021,7 +2021,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 80, y: -230}
+  m_AnchoredPosition: {x: 80, y: -60}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &743694062
@@ -2267,7 +2267,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efc58014333c7d344bee92e941dd7d06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animFlg: 00000000
+  animFlg: 0000000000000000
 --- !u!95 &834019355
 Animator:
   serializedVersion: 3
@@ -2894,7 +2894,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efc58014333c7d344bee92e941dd7d06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animFlg: 00000000
+  animFlg: 0000000000000000
 --- !u!95 &1183753946
 Animator:
   serializedVersion: 3
@@ -3015,7 +3015,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 80, y: -80}
+  m_AnchoredPosition: {x: 80, y: -150}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1211791202
@@ -3071,7 +3071,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5570e9f36a98a248a3eee51f2cdf1ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timeCount: 30
   timeOut: 0
+  countStart: 0
 --- !u!1 &1220614388
 GameObject:
   m_ObjectHideFlags: 0
@@ -3310,7 +3312,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efc58014333c7d344bee92e941dd7d06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animFlg: 00000000
+  animFlg: 0000000000000000
 --- !u!95 &1371688181
 Animator:
   serializedVersion: 3
@@ -3848,7 +3850,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efc58014333c7d344bee92e941dd7d06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animFlg: 00000000
+  animFlg: 0000000000000000
 --- !u!95 &1547289133
 Animator:
   serializedVersion: 3
@@ -4061,7 +4063,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efc58014333c7d344bee92e941dd7d06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animFlg: 00000000
+  animFlg: 0000000000000000
 --- !u!95 &1684981436
 Animator:
   serializedVersion: 3
@@ -4274,7 +4276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efc58014333c7d344bee92e941dd7d06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animFlg: 00000000
+  animFlg: 0000000000000000
 --- !u!95 &1714166194
 Animator:
   serializedVersion: 3
@@ -4328,7 +4330,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 80, y: -140}
+  m_AnchoredPosition: {x: 80, y: -210}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1762727414
@@ -4481,7 +4483,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efc58014333c7d344bee92e941dd7d06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animFlg: 00000000
+  animFlg: 0000000000000000
 --- !u!95 &1808121878
 Animator:
   serializedVersion: 3
@@ -4720,7 +4722,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efc58014333c7d344bee92e941dd7d06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animFlg: 00000000
+  animFlg: 0000000000000000
 --- !u!1 &1842214446
 GameObject:
   m_ObjectHideFlags: 0
@@ -4828,7 +4830,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efc58014333c7d344bee92e941dd7d06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animFlg: 00000000
+  animFlg: 0000000000000000
 --- !u!95 &1842214452
 Animator:
   serializedVersion: 3
@@ -5195,7 +5197,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 80, y: -250}
+  m_AnchoredPosition: {x: 80, y: -80}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2073406253
@@ -5251,6 +5253,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7e75c2b64acda94fa1eef02ec7e9e1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nowTurn: 0
 --- !u!1 &2077808819
 GameObject:
   m_ObjectHideFlags: 0

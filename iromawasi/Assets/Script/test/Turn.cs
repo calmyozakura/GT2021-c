@@ -7,16 +7,17 @@ public class Turn : MonoBehaviour
 {
     Text turnText;
 
-    int nowTurn = 0;
+    public int nowTurn = 0;
 
     private void Start()
     {
         turnText = GetComponent<Text>();
+        turnText.text = "" + nowTurn;
     }
 
     public void TurnCount()
     {
-        nowTurn++;
+        nowTurn--;
         turnText.text = "" + nowTurn;
     }
 }

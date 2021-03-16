@@ -5,7 +5,7 @@ using UnityEngine;
 public class PanelAnim : MonoBehaviour
 {
     Animator anim;
-    public bool[] animFlg = new bool[4];
+    public bool[] animFlg = new bool[8];
 
     // Start is called before the first frame update
     void Start()
@@ -19,31 +19,43 @@ public class PanelAnim : MonoBehaviour
     {
         if (animFlg[0])
         {
-            //anim.SetBool("right", true);
-            //anim.SetBool("right", false);
             GetComponent<Animator>().SetTrigger("right");
             animFlg[0] = false;
         }
         else if (animFlg[1])
         {
-            //anim.SetBool("down", true);
-            //anim.SetBool("down", false);
             GetComponent<Animator>().SetTrigger("down");
             animFlg[1] = false;
         }
         else if (animFlg[2])
         {
-            //anim.SetBool("left", true);
-            //anim.SetBool("left", false);
             GetComponent<Animator>().SetTrigger("left");
             animFlg[2] = false;
         }
         else if (animFlg[3])
         {
-            //anim.SetBool("up", true);
             GetComponent<Animator>().SetTrigger("up");
-            //anim.SetBool("up", false);
             animFlg[3] = false;
+        }
+        else if (animFlg[4])
+        {
+            GetComponent<Animator>().SetTrigger("right2");
+            animFlg[4] = false;
+        }
+        else if (animFlg[5])
+        {
+            GetComponent<Animator>().SetTrigger("down2");
+            animFlg[5] = false;
+        }
+        else if (animFlg[6])
+        {
+            GetComponent<Animator>().SetTrigger("left2");
+            animFlg[6] = false;
+        }
+        else if (animFlg[7])
+        {
+            GetComponent<Animator>().SetTrigger("up2");
+            animFlg[7] = false;
         }
     }
 }
