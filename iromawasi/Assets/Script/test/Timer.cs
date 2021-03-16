@@ -6,25 +6,28 @@ using UnityEngine.UI;
 public class Timer : MonoBehaviour
 {
     Text timerText;
-    float timeCount = 60.0f;            //制限時間
+    public float timeCount = 30.0f;            //制限時間
     public bool timeOut;
+    public bool countStart;
 
     // Start is called before the first frame update
     void Start()
     {
         timerText = GetComponent<Text>();
+        timerText.text = timeCount.ToString("f1");  //時間の表示
     }
 
     public void TimerCount()
     {
-        if (timeCount > 0)
+        if (timeCount > 0 && countStart)
         {
             timeCount -= Time.deltaTime;    //制限時間のカウントダウン
-
             timerText.text = timeCount.ToString("f1");  //時間の表示
+
         }else if (timeCount <= 0)
         {
             timeOut = true;
+            countStart = false;
         }
     }
 }

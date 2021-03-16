@@ -88,6 +88,7 @@ public class TestStage : MonoBehaviour
         //turnText = Turn.GetComponent<Text>();
 
         ColorChange();   //パネルの色変更
+        TurnCS.nowTurn = 5; //ターン数の指定
     }
 
     // Update is called once per frame
@@ -97,9 +98,10 @@ public class TestStage : MonoBehaviour
         {
             if (!panelMove[0] && !panelMove[1]) PanelOperation();   //パネルの操作
             else if (panelMove[0] || panelMove[1]) PanelMove();        //パネルのアニメーション
-            PointCheck();   //盤面が揃ったか見る
+            //PointCheck();   //盤面が揃ったか見る 揃ったらすぐ変わる
             ColorChange();   //パネルの色変更
             TimerCS.TimerCount();       //制限時間のカウントと表示
+            TurnEnd();      //ターン終了時の処理
 
             //SelectImageMove();  //現在選んでいるパネルの可視化 ここで呼ぶ
             cursorSelectCS.SelectImageMove(chooseMain);
@@ -130,13 +132,13 @@ public class TestStage : MonoBehaviour
                 alpha_Sin = alpha_Time;
                 //alpha_Sin = Mathf.Sin(Time.time) / 2 + 0.5f;
 
-                mainSphereColor[check].a = alpha_Sin; //透明度を下げる
+                //mainSphereColor[check].a = alpha_Sin; //透明度を下げる
                 sideSphereColor[(check / 3) + check].a = alpha_Sin; //透明度を下げる
                 sideSphereColor[(check / 3) + check + 1].a = alpha_Sin; //透明度を下げる
                 sideSphereColor[(check / 3) + check + 4].a = alpha_Sin; //透明度を下げる
                 sideSphereColor[(check / 3) + check + 5].a = alpha_Sin; //透明度を下げる
 
-                mainSphere[check].GetComponent<Renderer>().material.color = sideSphereColor[check];
+                //mainSphere[check].GetComponent<Renderer>().material.color = sideSphereColor[check];
                 sideSphere[(check / 3) + check].GetComponent<Renderer>().material.color = sideSphereColor[(check / 3) + check];
                 sideSphere[(check / 3) + check + 1].GetComponent<Renderer>().material.color = sideSphereColor[(check / 3) + check + 1];
                 sideSphere[(check / 3) + check + 4].GetComponent<Renderer>().material.color = sideSphereColor[(check / 3) + check + 4];
@@ -163,13 +165,13 @@ public class TestStage : MonoBehaviour
                 {
                     if (flgCheck[i])
                     {
-                        mainSphereColor[i].a = alpha_Sin; //透明度を下げる
+                        //mainSphereColor[i].a = alpha_Sin; //透明度を下げる
                         sideSphereColor[(i / 3) + i].a = alpha_Sin; //透明度を下げる
                         sideSphereColor[(i / 3) + i + 1].a = alpha_Sin; //透明度を下げる
                         sideSphereColor[(i / 3) + i + 4].a = alpha_Sin; //透明度を下げる
                         sideSphereColor[(i / 3) + i + 5].a = alpha_Sin; //透明度を下げる
 
-                        mainSphere[i].GetComponent<Renderer>().material.color = sideSphereColor[i];
+                        //mainSphere[i].GetComponent<Renderer>().material.color = sideSphereColor[i];
                         sideSphere[(i / 3) + i].GetComponent<Renderer>().material.color = sideSphereColor[(i / 3) + i];
                         sideSphere[(i / 3) + i + 1].GetComponent<Renderer>().material.color = sideSphereColor[(i / 3) + i + 1];
                         sideSphere[(i / 3) + i + 4].GetComponent<Renderer>().material.color = sideSphereColor[(i / 3) + i + 4];
@@ -225,14 +227,14 @@ public class TestStage : MonoBehaviour
         //パネル反時計回り
         if (Input.GetButtonDown("LB"))
         {
-
             panelMove[0] = true;
+            if (!TimerCS.countStart) TimerCS.countStart = true;
         }
         //パネル時計回り
-        if (Input.GetButtonDown("RB"))
+        else if (Input.GetButtonDown("RB"))
         {
             panelMove[1] = true;
-
+            if (!TimerCS.countStart) TimerCS.countStart = true;
         }
 
         //十字キーのパネル選択
@@ -242,7 +244,7 @@ public class TestStage : MonoBehaviour
             else chooseMain += 3;
             ClossTilt = true;
         }
-        else if (0 < Input.GetAxis("ClossVertical") && !ClossTilt)  //↑入力時
+        if (0 < Input.GetAxis("ClossVertical") && !ClossTilt)  //↑入力時
         {
             if (chooseMain <= 2) chooseMain += 6;
             else chooseMain -= 3;
@@ -254,7 +256,7 @@ public class TestStage : MonoBehaviour
             else chooseMain -= 1;
             ClossTilt = true;
         }
-        else if (0 < Input.GetAxis("ClossHorizontal") && !ClossTilt)    //→入力時
+        if (0 < Input.GetAxis("ClossHorizontal") && !ClossTilt)    //→入力時
         {
             if (chooseMain % 3 == 2) chooseMain -= 2;
             else chooseMain += 1;
@@ -262,12 +264,6 @@ public class TestStage : MonoBehaviour
         }
 
         if (0 == Input.GetAxis("ClossHorizontal") && (0 == Input.GetAxis("ClossVertical"))) ClossTilt = false;
-
-        //if (Input.GetButtonDown("X")) //ターン終了
-        //{
-        //    if (!alpha_Flg) PointCheck();
-        //    TurnCS.TurnCount();        //経過ターンの更新表示
-        //}
     }
     //***
     void PointCheck()
@@ -374,9 +370,9 @@ public class TestStage : MonoBehaviour
     //***
     void PanelMove()    //アニメーション終了時に呼ぶ
     {
-        if (changeTime > 0) changeTime -= Time.deltaTime;
-        else if (changeTime <= 0)
-        {
+        //if (changeTime > 0) changeTime -= Time.deltaTime;
+        //else if (changeTime <= 0)
+        //{
             if (panelMove[0])   //反時計周り
             {
                 //パネルの回転アニメーション
@@ -418,10 +414,10 @@ public class TestStage : MonoBehaviour
             else if (panelMove[1])  //時計周り
             {
                 //パネルの回転アニメーション
-                panelAnim[(chooseMain / 3) + chooseMain].animFlg[0] = true; //right
-                panelAnim[(chooseMain / 3) + chooseMain + 1].animFlg[1] = true; //down
-                panelAnim[(chooseMain / 3) + chooseMain + 5].animFlg[2] = true; //up
-                panelAnim[(chooseMain / 3) + chooseMain + 4].animFlg[3] = true; //left
+                panelAnim[(chooseMain / 3) + chooseMain].animFlg[4] = true; //right2
+                panelAnim[(chooseMain / 3) + chooseMain + 1].animFlg[5] = true; //down2
+                panelAnim[(chooseMain / 3) + chooseMain + 5].animFlg[6] = true; //up2
+                panelAnim[(chooseMain / 3) + chooseMain + 4].animFlg[7] = true; //left2
 
                 //ナンバー入れ替え
                 tmpNumber = sideNumber[(chooseMain / 3) + chooseMain];
@@ -459,20 +455,42 @@ public class TestStage : MonoBehaviour
                 //sideSphereColor[(chooseMain / 3) + chooseMain + 1] = tmpSideColor;
 
                 panelMove[1] = false;
-            }
-            changeTime = 0.1f;
+        //    }
+        //    changeTime = 0.1f;
         }
     }
 
     void ScoreAdd()
     {
         //スコア+100と各パネルのボーナス分スコア+50
-        score += 100 + (50 * (bonusLevel[(check / 3) + check] + bonusLevel[(check / 3) + check + 1]
-            + bonusLevel[(check / 3) + check + 5] + bonusLevel[(check / 3) + check + 4]));
+        //score += 100 + (50 * (bonusLevel[(check / 3) + check] + bonusLevel[(check / 3) + check + 1]
+        //    + bonusLevel[(check / 3) + check + 5] + bonusLevel[(check / 3) + check + 4]));
+
+        //スコア100と1コンボ50
+        score += 100 + (50 * ComboCS.comboCount);
 
         scoreText.text = "" + score;
 
         ComboCS.comboTime = 5.0f;
         ComboCS.comboCount += 1;
+    }
+
+    void TurnEnd()
+    {
+        if (TurnCS.nowTurn > 0)
+        {
+            if (Input.GetButtonDown("X") || TimerCS.timeOut) //Xか制限時間でターン終了
+            {
+                if (!alpha_Flg) PointCheck();
+                TimerCS.timeCount = 30.0f;
+                TimerCS.timeOut = false;
+                TurnCS.TurnCount();        //経過ターンの更新表示
+            }
+        }
+        else
+        {
+            if (TimerCS.timeCount > 0) TimerCS.timeCount = 0f;
+            //ゲーム終了かリトライ
+        }
     }
 }
