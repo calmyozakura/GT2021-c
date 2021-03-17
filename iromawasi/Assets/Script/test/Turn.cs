@@ -7,7 +7,7 @@ public class Turn : MonoBehaviour
 {
     Text turnText;
 
-    public int nowTurn = 1;
+    public int nowTurn = 0;
 
     private void Start()
     {
@@ -17,7 +17,7 @@ public class Turn : MonoBehaviour
 
     public void TurnCount()
     {
-        nowTurn++;
+        nowTurn--;
         turnText.text = "" + nowTurn;
     }
 }
