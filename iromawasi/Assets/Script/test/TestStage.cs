@@ -45,6 +45,10 @@ public class TestStage : MonoBehaviour
 
     int[] mainColorNumber = { 4, 32, 128, 512 };    //メイン色の配列(赤、青、緑、黄)
     int[] sideColorNumber = { 1, 8, 32, 128 };     //サイド色の配列(赤、青、緑、黄)
+    int[] rainbowNumber = { 0, 1, 4, 5 };           //虹衛星を出すときに使う
+    bool rainbow;
+    int[] rainbowRand = new int[mainPanel]; //虹衛星をランダムに配置するための変数
+    int rainbowTarget = 0;
     //[SerializeField] GameObject selectMainImage; //現在選択しているメインパネルを表示
 
     [SerializeField] GameObject Score;  //スコアのテキストオブジェクト
@@ -65,7 +69,7 @@ public class TestStage : MonoBehaviour
     int mainColorNum = 0;               //全パネルが同じ色になったら色を変える
 
     bool[] panelMove = new bool[2]; //右か左にパネル移動させるフラグ
-    float changeTime = 0.1f;
+    //float changeTime = 0.1f;
 
     // Start is called before the first frame update
     void Start()
@@ -194,8 +198,19 @@ public class TestStage : MonoBehaviour
                         sideNumber[(i / 3) + i + 1] = sideColorNumber[Random.Range(0, 2)];
                         sideNumber[(i / 3) + i + 5] = sideColorNumber[Random.Range(0, 2)];
                         sideNumber[(i / 3) + i + 4] = sideColorNumber[Random.Range(0, 2)];
+
+                        rainbowRand[rainbowTarget] = i; //条件を満たした惑星の位置を把握しておく
+                        Debug.Log("rain" + rainbowRand[rainbowTarget]);
+                        rainbowTarget += 1;
                     }
                     mainColorNum += mainNumber[i];  //[0]^[3]合計を得る
+                }
+
+                if (ComboCS.comboCount >= 3 && !rainbow) //条件を満たした惑星のどこかに3コンボ以上で虹惑星を１つだす
+                {
+                    rainbow = true;
+                    sideNumber[(rainbowRand[Random.Range(0, ComboCS.comboCount)] / 3) 
+                        + rainbowRand[Random.Range(0, ComboCS.comboCount)] + rainbowNumber[Random.Range(0, 4)]] = sideColorNumber[2];
                 }
 
                 for (int j = 0; j < 4; j++)  //[0]^[9]の合計と色*4を見る { 4, 32, 128, 512}
@@ -210,13 +225,14 @@ public class TestStage : MonoBehaviour
                         }
                     }
                 }
-
                 Bonus();    //ボーナスパネル設定
                 for (int f = 0; f < mainPanel; f++) flgCheck[f] = false; //念のため別のforでfalseにする
                 mainColorNum = 0;
                 ColorChange();   //パネルの色変更
                 check = 0;
+                rainbow = false;
                 alpha_Flg = false;
+                rainbowTarget = 0;
             }
         }
         else check += 1;
@@ -272,26 +288,42 @@ public class TestStage : MonoBehaviour
         for (int i = 0; i < mainPanel; i++)
         {
 
-            judgNum += sideNumber[(i / 3) + i];
-            judgNum += sideNumber[(i / 3) + i + 1];
-            judgNum += sideNumber[(i / 3) + i + 5];
-            judgNum += sideNumber[(i / 3) + i + 4];
+            //judgNum += sideNumber[(i / 3) + i];
+            //judgNum += sideNumber[(i / 3) + i + 1];
+            //judgNum += sideNumber[(i / 3) + i + 5];
+            //judgNum += sideNumber[(i / 3) + i + 4];
 
+            judgNum = mainNumber[i];
 
-            if (judgNum == mainNumber[i])   //色を満たした
-            {
-                flgCheck[i] = true;
+            if(judgNum == sideNumber[(i / 3) + i] * 4 || sideNumber[(i / 3) + i] == 32)
+                if(judgNum == sideNumber[(i / 3) + i + 1] * 4 || sideNumber[(i / 3) + i + 1] == 32)
+                    if (judgNum == sideNumber[(i / 3) + i + 5] * 4 || sideNumber[(i / 3) + i + 5] == 32)
+                        if (judgNum == sideNumber[(i / 3) + i + 4] * 4 || sideNumber[(i / 3) + i + 4] == 32) //色を満たした
+                        {
+                            flgCheck[i] = true;
 
-                //ボーナスフラグon
-                bonusFlg[(i / 3) + i] = true;
-                bonusFlg[(i / 3) + i + 1] = true;
-                bonusFlg[(i / 3) + i + 5] = true;
-                bonusFlg[(i / 3) + i + 4] = true;
+                            //ボーナスフラグon
+                            bonusFlg[(i / 3) + i] = true;
+                            bonusFlg[(i / 3) + i + 1] = true;
+                            bonusFlg[(i / 3) + i + 5] = true;
+                            bonusFlg[(i / 3) + i + 4] = true;
 
-                alpha_Flg = true;
-            }
-
+                            alpha_Flg = true;
+                        }
             judgNum = 0;
+
+            //if (judgNum == mainNumber[i])   //色を満たした
+            //{
+            //    flgCheck[i] = true;
+
+            //    //ボーナスフラグon
+            //    bonusFlg[(i / 3) + i] = true;
+            //    bonusFlg[(i / 3) + i + 1] = true;
+            //    bonusFlg[(i / 3) + i + 5] = true;
+            //    bonusFlg[(i / 3) + i + 4] = true;
+
+            //    alpha_Flg = true;
+            //}
         }
     }
 
