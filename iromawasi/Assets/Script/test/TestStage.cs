@@ -60,8 +60,8 @@ public class TestStage : MonoBehaviour
     //Text turnText;
     //int nowTurn = 0;
 
-    float alpha_Time = 1.0f;   //点滅させる時間
-    float alpha_Sin;    //消すときに点滅させる
+    float alpha_Time = 6.5f;   //点滅させる時間
+    float alpha_Sin = 6.5f;    //消すときに点滅させる
     bool alpha_Flg;
     int check = 0; //中身を順にみる変数
 
@@ -69,7 +69,11 @@ public class TestStage : MonoBehaviour
     int mainColorNum = 0;               //全パネルが同じ色になったら色を変える
 
     bool[] panelMove = new bool[2]; //右か左にパネル移動させるフラグ
-    //float changeTime = 0.1f;
+                                    //float changeTime = 0.1f;
+
+    public Texture NormalmapTexture;//**/
+    public Material TargetMaterial;//**/
+    [SerializeField] Material[] _material;
 
     // Start is called before the first frame update
     void Start()
@@ -77,13 +81,13 @@ public class TestStage : MonoBehaviour
         for (int i = 0; i < mainPanel; i++)
         {
             mainNumber[i] = mainColorNumber[Random.Range(0, 2)];
-            mainSphereColor[i] = mainSphere[i].GetComponent<Renderer>().material.color;
+            //mainSphereColor[i] = mainSphere[i].GetComponent<Renderer>().material.color;
         }
 
         for (int i = 0; i < sidePanel; i++)
         {
             sideNumber[i] = sideColorNumber[Random.Range(0, 2)];
-            sideSphereColor[i] = sideSphere[i].GetComponent<Renderer>().material.color;
+            //sideSphereColor[i] = sideSphere[i].GetComponent<Renderer>().material.color;
             //panelAnim[i] = obj[i].GetComponent<PanelAnim>();一時消し
         }
 
@@ -92,7 +96,6 @@ public class TestStage : MonoBehaviour
         //turnText = Turn.GetComponent<Text>();
 
         ColorChange();   //パネルの色変更
-        TurnCS.nowTurn = 5; //ターン数の指定
     }
 
     // Update is called once per frame
@@ -127,30 +130,37 @@ public class TestStage : MonoBehaviour
     //***
     void alpha()
     {
+
         if (flgCheck[check] && check <= (mainPanel - 1))   //0~9で条件を満たしたら
         {
 
-            if (alpha_Time >= 0.4f)    //条件を満たしたパネルの点滅
+            if (alpha_Time < 7.8f)    //条件を満たしたパネルの点滅
             {
-                alpha_Time -= Time.deltaTime * 2;    //制限時間のカウントダウン
+                alpha_Time += Time.deltaTime * 6;    //制限時間のカウントダウン(1.0~0.6)
                 alpha_Sin = alpha_Time;
                 //alpha_Sin = Mathf.Sin(Time.time) / 2 + 0.5f;
 
                 //mainSphereColor[check].a = alpha_Sin; //透明度を下げる
-                sideSphereColor[(check / 3) + check].a = alpha_Sin; //透明度を下げる
-                sideSphereColor[(check / 3) + check + 1].a = alpha_Sin; //透明度を下げる
-                sideSphereColor[(check / 3) + check + 4].a = alpha_Sin; //透明度を下げる
-                sideSphereColor[(check / 3) + check + 5].a = alpha_Sin; //透明度を下げる
+                //sideSphereColor[(check / 3) + check].a = alpha_Sin; //透明度を下げる
+                //sideSphereColor[(check / 3) + check + 1].a = alpha_Sin; //透明度を下げる
+                //sideSphereColor[(check / 3) + check + 4].a = alpha_Sin; //透明度を下げる
+                //sideSphereColor[(check / 3) + check + 5].a = alpha_Sin; //透明度を下げる
 
                 //mainSphere[check].GetComponent<Renderer>().material.color = sideSphereColor[check];
-                sideSphere[(check / 3) + check].GetComponent<Renderer>().material.color = sideSphereColor[(check / 3) + check];
-                sideSphere[(check / 3) + check + 1].GetComponent<Renderer>().material.color = sideSphereColor[(check / 3) + check + 1];
-                sideSphere[(check / 3) + check + 4].GetComponent<Renderer>().material.color = sideSphereColor[(check / 3) + check + 4];
-                sideSphere[(check / 3) + check + 5].GetComponent<Renderer>().material.color = sideSphereColor[(check / 3) + check + 5];
+                //sideSphere[(check / 3) + check].GetComponent<Renderer>().material.color = sideSphereColor[(check / 3) + check];
+                //sideSphere[(check / 3) + check + 1].GetComponent<Renderer>().material.color = sideSphereColor[(check / 3) + check + 1];
+                //sideSphere[(check / 3) + check + 4].GetComponent<Renderer>().material.color = sideSphereColor[(check / 3) + check + 4];
+                //sideSphere[(check / 3) + check + 5].GetComponent<Renderer>().material.color = sideSphereColor[(check / 3) + check + 5];
+
+                mainSphere[check].GetComponent<Renderer>().material.SetFloat("_AtmosphereDensity", alpha_Sin);
+                sideSphere[(check / 3) + check].GetComponent<Renderer>().material.SetFloat("_AtmosphereDensity", alpha_Sin);
+                sideSphere[(check / 3) + check + 1].GetComponent<Renderer>().material.SetFloat("_AtmosphereDensity", alpha_Sin);
+                sideSphere[(check / 3) + check + 4].GetComponent<Renderer>().material.SetFloat("_AtmosphereDensity", alpha_Sin);
+                sideSphere[(check / 3) + check + 5].GetComponent<Renderer>().material.SetFloat("_AtmosphereDensity", alpha_Sin);
             }
-            else if (alpha_Time <= 0.5f)
+            else if (alpha_Time >= 7.8f)
             {
-                alpha_Time = 1.0f;
+                alpha_Time = 6.5f;
                 //flgCheck[check] = false;
                 //ColorChange();
 
@@ -161,25 +171,32 @@ public class TestStage : MonoBehaviour
         }
         else if (check > (mainPanel - 1))    //最後に盤面を変える
         {
-            if (alpha_Sin >= 0)    //半透明から透明へ
+            if (alpha_Time < 8)    //半透明から透明へ
             {
-                alpha_Sin -= Time.deltaTime * 2;
+                //alpha_Sin -= Time.deltaTime * 2;
+                alpha_Time += Time.deltaTime * 3;
 
                 for (int i = 0; i < mainPanel; i++)
                 {
                     if (flgCheck[i])
                     {
                         //mainSphereColor[i].a = alpha_Sin; //透明度を下げる
-                        sideSphereColor[(i / 3) + i].a = alpha_Sin; //透明度を下げる
-                        sideSphereColor[(i / 3) + i + 1].a = alpha_Sin; //透明度を下げる
-                        sideSphereColor[(i / 3) + i + 4].a = alpha_Sin; //透明度を下げる
-                        sideSphereColor[(i / 3) + i + 5].a = alpha_Sin; //透明度を下げる
+                        //sideSphereColor[(i / 3) + i].a = alpha_Sin; //透明度を下げる
+                        //sideSphereColor[(i / 3) + i + 1].a = alpha_Sin; //透明度を下げる
+                        //sideSphereColor[(i / 3) + i + 4].a = alpha_Sin; //透明度を下げる
+                        //sideSphereColor[(i / 3) + i + 5].a = alpha_Sin; //透明度を下げる
 
                         //mainSphere[i].GetComponent<Renderer>().material.color = sideSphereColor[i];
-                        sideSphere[(i / 3) + i].GetComponent<Renderer>().material.color = sideSphereColor[(i / 3) + i];
-                        sideSphere[(i / 3) + i + 1].GetComponent<Renderer>().material.color = sideSphereColor[(i / 3) + i + 1];
-                        sideSphere[(i / 3) + i + 4].GetComponent<Renderer>().material.color = sideSphereColor[(i / 3) + i + 4];
-                        sideSphere[(i / 3) + i + 5].GetComponent<Renderer>().material.color = sideSphereColor[(i / 3) + i + 5];
+                        //sideSphere[(i / 3) + i].GetComponent<Renderer>().material.color = sideSphereColor[(i / 3) + i];
+                        //sideSphere[(i / 3) + i + 1].GetComponent<Renderer>().material.color = sideSphereColor[(i / 3) + i + 1];
+                        //sideSphere[(i / 3) + i + 4].GetComponent<Renderer>().material.color = sideSphereColor[(i / 3) + i + 4];
+                        //sideSphere[(i / 3) + i + 5].GetComponent<Renderer>().material.color = sideSphereColor[(i / 3) + i + 5];
+
+                        mainSphere[i].GetComponent<Renderer>().material.SetFloat("_AtmosphereDensity", 8);
+                        sideSphere[(i / 3) + i].GetComponent<Renderer>().material.SetFloat("_AtmosphereDensity", 8);
+                        sideSphere[(i / 3) + i + 1].GetComponent<Renderer>().material.SetFloat("_AtmosphereDensity", 8);
+                        sideSphere[(i / 3) + i + 4].GetComponent<Renderer>().material.SetFloat("_AtmosphereDensity", 8);
+                        sideSphere[(i / 3) + i + 5].GetComponent<Renderer>().material.SetFloat("_AtmosphereDensity", 8);
                     }
                 }
             }
@@ -200,7 +217,6 @@ public class TestStage : MonoBehaviour
                         sideNumber[(i / 3) + i + 4] = sideColorNumber[Random.Range(0, 2)];
 
                         rainbowRand[rainbowTarget] = i; //条件を満たした惑星の位置を把握しておく
-                        Debug.Log("rain" + rainbowRand[rainbowTarget]);
                         rainbowTarget += 1;
                     }
                     mainColorNum += mainNumber[i];  //[0]^[3]合計を得る
@@ -335,12 +351,14 @@ public class TestStage : MonoBehaviour
             switch (mainNumber[i])
             {
                 case 4:
-                    mainSphereColor[i] = Color.red;
-                    mainSphere[i].GetComponent<Renderer>().material.color = mainSphereColor[i];
+                    //mainSphereColor[i] = Color.red;
+                    //mainSphere[i].GetComponent<Renderer>().material.color = mainSphereColor[i];
+                    mainSphere[i].GetComponent<Renderer>().material = _material[0];
                     break;
                 case 32:
-                    mainSphereColor[i] = Color.blue;
-                    mainSphere[i].GetComponent<Renderer>().material.color = mainSphereColor[i];
+                    //mainSphereColor[i] = Color.blue;
+                    //mainSphere[i].GetComponent<Renderer>().material.color = mainSphereColor[i];
+                    mainSphere[i].GetComponent<Renderer>().material = _material[1];
                     break;
                 case 128:
                     mainSphereColor[i] = Color.yellow;
@@ -360,16 +378,20 @@ public class TestStage : MonoBehaviour
             switch (sideNumber[i])
             {
                 case 1:
-                    sideSphereColor[i] = Color.red;
-                    sideSphere[i].GetComponent<Renderer>().material.color = sideSphereColor[i];
+                    //sideSphereColor[i] = Color.red;
+                    //sideSphere[i].GetComponent<Renderer>().material.color = sideSphereColor[i];
+                    //TargetMaterial.SetTexture("_BumpMap", NormalmapTexture);
+                    sideSphere[i].GetComponent<Renderer>().material = _material[0];
                     break;
                 case 8:
-                    sideSphereColor[i] = Color.blue;
-                    sideSphere[i].GetComponent<Renderer>().material.color = sideSphereColor[i];
+                    //sideSphereColor[i] = Color.blue;
+                    //sideSphere[i].GetComponent<Renderer>().material.color = sideSphereColor[i];
+                    sideSphere[i].GetComponent<Renderer>().material = _material[1];
                     break;
                 case 32:
-                    sideSphereColor[i] = Color.yellow;
-                    sideSphere[i].GetComponent<Renderer>().material.color = sideSphereColor[i];
+                    //sideSphereColor[i] = Color.yellow;
+                    //sideSphere[i].GetComponent<Renderer>().material.color = sideSphereColor[i];
+                    sideSphere[i].GetComponent<Renderer>().material = _material[2];
                     break;
                 case 128:
                     sideSphereColor[i] = Color.green;
@@ -509,13 +531,14 @@ public class TestStage : MonoBehaviour
 
     void TurnEnd()
     {
-        if (TurnCS.nowTurn > 0)
+        if (TurnCS.nowTurn < 5)
         {
             if (Input.GetButtonDown("X") || TimerCS.timeOut) //Xか制限時間でターン終了
             {
                 if (!alpha_Flg) PointCheck();
                 TimerCS.timeCount = 30.0f;
                 TimerCS.timeOut = false;
+                TimerCS.countStart = false;
                 TurnCS.TurnCount();        //経過ターンの更新表示
             }
         }
