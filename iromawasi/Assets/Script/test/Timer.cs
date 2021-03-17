@@ -19,10 +19,10 @@ public class Timer : MonoBehaviour
 
     public void TimerCount()
     {
+        timerText.text = timeCount.ToString("f1");  //時間の表示
         if (timeCount > 0 && countStart)
         {
             timeCount -= Time.deltaTime;    //制限時間のカウントダウン
-            timerText.text = timeCount.ToString("f1");  //時間の表示
 
         }else if (timeCount <= 0)
         {

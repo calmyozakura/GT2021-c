@@ -4,8 +4,9 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: Mars
   m_Shader: {fileID: 4800000, guid: 543a72c43ae674441b36c43b80402166, type: 3}
   m_ShaderKeywords: _METALLICGLOSSMAP _NORMALMAP _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
@@ -21,6 +22,10 @@ Material:
     m_TexEnvs:
     - _BumpMap:
         m_Texture: {fileID: 2800000, guid: 848de9c1671565a4e8536be1e15eedee, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CityLightMap:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _CloudMap:
@@ -79,6 +84,7 @@ Material:
     - _AtmosphereDensity: 2.44
     - _AtmosphereStrength: 4.88
     - _BumpScale: 5
+    - _CityLightIntensity: 0
     - _CloudMapSpecularity: -0.05
     - _CloudPanSpeed: -0.28
     - _Cutoff: 0.5
@@ -106,7 +112,8 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _AtmosphereColor: {r: 0.47931036, g: 0.3212333, b: 0.26432556, a: 1}
+    - _AtmosphereColor: {r: 1, g: 0.14877309, b: 0, a: 1}
+    - _CityLightColor: {r: 1, g: 1, b: 1, a: 1}
     - _CloudColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DetailColor: {r: 0.77205884, g: 0.77205884, b: 0.77205884, a: 1}

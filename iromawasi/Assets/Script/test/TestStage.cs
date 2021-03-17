@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class TestStage : MonoBehaviour
 {
@@ -20,7 +21,7 @@ public class TestStage : MonoBehaviour
     bool[] bonusFlg = new bool[sidePanel]; //このターン既にボーナスパネルになったかどうか
     int tmpBonus;         //ボーナス入れ替え時の一時保存
     int judgNum = 0;  //和を計算する配列
-    int score = 0;      //スコア
+    public static int score = 0;      //スコア
 
     int chooseMain = 0; //現在選んでいるメインナンバー
 
@@ -60,7 +61,7 @@ public class TestStage : MonoBehaviour
     //Text turnText;
     //int nowTurn = 0;
 
-    float alpha_Time = 1.0f;   //点滅させる時間
+    float alpha_Time = 0f;   //点滅させる時間
     float alpha_Sin;    //消すときに点滅させる
     bool alpha_Flg;
     int check = 0; //中身を順にみる変数
@@ -69,7 +70,10 @@ public class TestStage : MonoBehaviour
     int mainColorNum = 0;               //全パネルが同じ色になったら色を変える
 
     bool[] panelMove = new bool[2]; //右か左にパネル移動させるフラグ
-    //float changeTime = 0.1f;
+                                    //float changeTime = 0.1f;
+
+    public Material[] _material;           // 割り当てるマテリアル.
+    public Texture NormalmapTexture;
 
     // Start is called before the first frame update
     void Start()
@@ -130,27 +134,33 @@ public class TestStage : MonoBehaviour
         if (flgCheck[check] && check <= (mainPanel - 1))   //0~9で条件を満たしたら
         {
 
-            if (alpha_Time >= 0.4f)    //条件を満たしたパネルの点滅
+            if (alpha_Time < 0.6f)    //条件を満たしたパネルの点滅
             {
-                alpha_Time -= Time.deltaTime * 2;    //制限時間のカウントダウン
-                alpha_Sin = alpha_Time;
+                alpha_Time += Time.deltaTime * 2;    //制限時間のカウントダウン
+                alpha_Sin = (alpha_Time * 6) + 5;
                 //alpha_Sin = Mathf.Sin(Time.time) / 2 + 0.5f;
 
                 //mainSphereColor[check].a = alpha_Sin; //透明度を下げる
-                sideSphereColor[(check / 3) + check].a = alpha_Sin; //透明度を下げる
-                sideSphereColor[(check / 3) + check + 1].a = alpha_Sin; //透明度を下げる
-                sideSphereColor[(check / 3) + check + 4].a = alpha_Sin; //透明度を下げる
-                sideSphereColor[(check / 3) + check + 5].a = alpha_Sin; //透明度を下げる
+                //sideSphereColor[(check / 3) + check].a = alpha_Sin; //透明度を下げる
+                //sideSphereColor[(check / 3) + check + 1].a = alpha_Sin; //透明度を下げる
+                //sideSphereColor[(check / 3) + check + 4].a = alpha_Sin; //透明度を下げる
+                //sideSphereColor[(check / 3) + check + 5].a = alpha_Sin; //透明度を下げる
 
                 //mainSphere[check].GetComponent<Renderer>().material.color = sideSphereColor[check];
-                sideSphere[(check / 3) + check].GetComponent<Renderer>().material.color = sideSphereColor[(check / 3) + check];
-                sideSphere[(check / 3) + check + 1].GetComponent<Renderer>().material.color = sideSphereColor[(check / 3) + check + 1];
-                sideSphere[(check / 3) + check + 4].GetComponent<Renderer>().material.color = sideSphereColor[(check / 3) + check + 4];
-                sideSphere[(check / 3) + check + 5].GetComponent<Renderer>().material.color = sideSphereColor[(check / 3) + check + 5];
+                //sideSphere[(check / 3) + check].GetComponent<Renderer>().material.color = sideSphereColor[(check / 3) + check];
+                //sideSphere[(check / 3) + check + 1].GetComponent<Renderer>().material.color = sideSphereColor[(check / 3) + check + 1];
+                //sideSphere[(check / 3) + check + 4].GetComponent<Renderer>().material.color = sideSphereColor[(check / 3) + check + 4];
+                //sideSphere[(check / 3) + check + 5].GetComponent<Renderer>().material.color = sideSphereColor[(check / 3) + check + 5];
+
+                mainSphere[check].GetComponent<Renderer>().material.SetFloat("_AtmosphereDensity", alpha_Sin);
+                sideSphere[(check / 3) + check].GetComponent<Renderer>().material.SetFloat("_AtmosphereDensity", alpha_Sin);
+                sideSphere[(check / 3) + check + 1].GetComponent<Renderer>().material.SetFloat("_AtmosphereDensity", alpha_Sin);
+                sideSphere[(check / 3) + check + 4].GetComponent<Renderer>().material.SetFloat("_AtmosphereDensity", alpha_Sin);
+                sideSphere[(check / 3) + check + 5].GetComponent<Renderer>().material.SetFloat("_AtmosphereDensity", alpha_Sin);
             }
-            else if (alpha_Time <= 0.5f)
+            else if (alpha_Time >= 0.6f)
             {
-                alpha_Time = 1.0f;
+                alpha_Time = 0;
                 //flgCheck[check] = false;
                 //ColorChange();
 
@@ -161,25 +171,31 @@ public class TestStage : MonoBehaviour
         }
         else if (check > (mainPanel - 1))    //最後に盤面を変える
         {
-            if (alpha_Sin >= 0)    //半透明から透明へ
+            if (alpha_Sin <= 8)    //半透明から透明へ
             {
-                alpha_Sin -= Time.deltaTime * 2;
+                alpha_Sin += Time.deltaTime * 2;
 
                 for (int i = 0; i < mainPanel; i++)
                 {
                     if (flgCheck[i])
                     {
                         //mainSphereColor[i].a = alpha_Sin; //透明度を下げる
-                        sideSphereColor[(i / 3) + i].a = alpha_Sin; //透明度を下げる
-                        sideSphereColor[(i / 3) + i + 1].a = alpha_Sin; //透明度を下げる
-                        sideSphereColor[(i / 3) + i + 4].a = alpha_Sin; //透明度を下げる
-                        sideSphereColor[(i / 3) + i + 5].a = alpha_Sin; //透明度を下げる
+                        //sideSphereColor[(i / 3) + i].a = alpha_Sin; //透明度を下げる
+                        //sideSphereColor[(i / 3) + i + 1].a = alpha_Sin; //透明度を下げる
+                        //sideSphereColor[(i / 3) + i + 4].a = alpha_Sin; //透明度を下げる
+                        //sideSphereColor[(i / 3) + i + 5].a = alpha_Sin; //透明度を下げる
 
                         //mainSphere[i].GetComponent<Renderer>().material.color = sideSphereColor[i];
-                        sideSphere[(i / 3) + i].GetComponent<Renderer>().material.color = sideSphereColor[(i / 3) + i];
-                        sideSphere[(i / 3) + i + 1].GetComponent<Renderer>().material.color = sideSphereColor[(i / 3) + i + 1];
-                        sideSphere[(i / 3) + i + 4].GetComponent<Renderer>().material.color = sideSphereColor[(i / 3) + i + 4];
-                        sideSphere[(i / 3) + i + 5].GetComponent<Renderer>().material.color = sideSphereColor[(i / 3) + i + 5];
+                        //sideSphere[(i / 3) + i].GetComponent<Renderer>().material.color = sideSphereColor[(i / 3) + i];
+                        //sideSphere[(i / 3) + i + 1].GetComponent<Renderer>().material.color = sideSphereColor[(i / 3) + i + 1];
+                        //sideSphere[(i / 3) + i + 4].GetComponent<Renderer>().material.color = sideSphereColor[(i / 3) + i + 4];
+                        //sideSphere[(i / 3) + i + 5].GetComponent<Renderer>().material.color = sideSphereColor[(i / 3) + i + 5];
+
+                        mainSphere[i].GetComponent<Renderer>().material.SetFloat("_AtmosphereDensity", 8);
+                        sideSphere[(i / 3) + i].GetComponent<Renderer>().material.SetFloat("_AtmosphereDensity", 8);
+                        sideSphere[(i / 3) + i + 1].GetComponent<Renderer>().material.SetFloat("_AtmosphereDensity", 8);
+                        sideSphere[(i / 3) + i + 4].GetComponent<Renderer>().material.SetFloat("_AtmosphereDensity", 8);
+                        sideSphere[(i / 3) + i + 5].GetComponent<Renderer>().material.SetFloat("_AtmosphereDensity", 8);
                     }
                 }
             }
@@ -334,12 +350,14 @@ public class TestStage : MonoBehaviour
             switch (mainNumber[i])
             {
                 case 4:
-                    mainSphereColor[i] = Color.red;
-                    mainSphere[i].GetComponent<Renderer>().material.color = mainSphereColor[i];
+                    //mainSphereColor[i] = Color.red;
+                    //mainSphere[i].GetComponent<Renderer>().material.color = mainSphereColor[i];
+                    mainSphere[i].GetComponent<Renderer>().material = _material[0];
                     break;
                 case 32:
-                    mainSphereColor[i] = Color.blue;
-                    mainSphere[i].GetComponent<Renderer>().material.color = mainSphereColor[i];
+                    //mainSphereColor[i] = Color.blue;
+                    //mainSphere[i].GetComponent<Renderer>().material.color = mainSphereColor[i];
+                    mainSphere[i].GetComponent<Renderer>().material = _material[1];
                     break;
                 case 128:
                     mainSphereColor[i] = Color.yellow;
@@ -359,16 +377,19 @@ public class TestStage : MonoBehaviour
             switch (sideNumber[i])
             {
                 case 1:
-                    sideSphereColor[i] = Color.red;
-                    sideSphere[i].GetComponent<Renderer>().material.color = sideSphereColor[i];
+                    //sideSphereColor[i] = Color.red;
+                    //sideSphere[i].GetComponent<Renderer>().material.color = sideSphereColor[i];
+                    sideSphere[i].GetComponent<Renderer>().material = _material[0];
                     break;
                 case 8:
-                    sideSphereColor[i] = Color.blue;
-                    sideSphere[i].GetComponent<Renderer>().material.color = sideSphereColor[i];
+                    //sideSphereColor[i] = Color.blue;
+                    //sideSphere[i].GetComponent<Renderer>().material.color = sideSphereColor[i];
+                    sideSphere[i].GetComponent<Renderer>().material = _material[1];
                     break;
                 case 32:
-                    sideSphereColor[i] = Color.yellow;
-                    sideSphere[i].GetComponent<Renderer>().material.color = sideSphereColor[i];
+                    //sideSphereColor[i] = Color.yellow;
+                    //sideSphere[i].GetComponent<Renderer>().material.color = sideSphereColor[i];
+                    sideSphere[i].GetComponent<Renderer>().material = _material[2];
                     break;
                 case 128:
                     sideSphereColor[i] = Color.green;
@@ -515,6 +536,8 @@ public class TestStage : MonoBehaviour
                 if (!alpha_Flg) PointCheck();
                 TimerCS.timeCount = 30.0f;
                 TimerCS.timeOut = false;
+                TimerCS.countStart = false;
+                ComboCS.comboCount = 0; //コンボカウントリセット
                 TurnCS.TurnCount();        //経過ターンの更新表示
             }
         }
@@ -522,6 +545,7 @@ public class TestStage : MonoBehaviour
         {
             if (TimerCS.timeCount > 0) TimerCS.timeCount = 0f;
             //ゲーム終了かリトライ
+            SceneManager.LoadScene("Result");
         }
     }
 }
